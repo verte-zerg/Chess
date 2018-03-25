@@ -12,7 +12,7 @@ class Knight : public Figure {
 public:
 	Knight(Point pos, FigureColor color);
 	const virtual std::vector<Move> getMoves(const Board *b);
-	const virtual Knight* copy();
+	virtual Knight* copy();
 };
 
 #endif

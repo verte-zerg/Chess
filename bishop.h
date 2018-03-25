@@ -12,7 +12,7 @@ class Bishop : public Figure {
 public:
 	Bishop(Point pos, FigureColor color);
 	const virtual std::vector<Move> getMoves(const Board *b);
-	const virtual Bishop* copy();
+	virtual Bishop* copy();
 };
 
 #endif

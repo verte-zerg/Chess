@@ -1,6 +1,7 @@
 #include "board.h"
 #include <cstddef>
 #include "figureColor.h"
+#include "allFigures.h"
 
 void Board::moveFigure(Move move) {
     if ((*this)[move.to] != NULL)

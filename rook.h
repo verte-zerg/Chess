@@ -1,4 +1,5 @@
-#pragma once
+#ifndef ROOK_H
+#define ROOK_H
 
 #include <vector>
 #include "point.h"
@@ -11,5 +12,7 @@ class Rook : public Figure {
 public:
 	Rook(Point pos, FigureColor color);
 	const virtual std::vector<Move> getMoves(const Board *b);
-	const virtual Rook* copy();
+	virtual Rook* copy();
 };
+
+#endif

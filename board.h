@@ -2,10 +2,10 @@
 #define BOARD_H
 
 #include <vector>
+#include <stack>
 #include "figure.h"
 #include "move.h"
 #include "point.h"
-#include <stack>
 
 class Figure;
 typedef Figure* figurePtr;
@@ -23,10 +23,10 @@ public:
     Board();
 
     /**
-     * @brief Конструктор копированиякласса доска
+     * @brief Конструктор копирования класса доска
      * Особенность: кладбище пустое
-     * @param b Доска, которую нужно клонировать
-     *      */
+     * @param b Доска, которую нужно клонировать    
+     */
     Board(Board& b);
 
     figurePtr board[8][8]; ///< Массив указателей на фигуры на доске

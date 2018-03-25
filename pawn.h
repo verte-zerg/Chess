@@ -12,7 +12,7 @@ class Pawn : public Figure {
 public:
 	Pawn(Point pos, FigureColor color);
 	const virtual std::vector<Move> getMoves(const Board *b);
-	const virtual Pawn* copy();
+	virtual Pawn* copy();
 };
 
 #endif
