@@ -8,11 +8,15 @@
 #include "figure.h"
 #include "board.h"
 
+/**
+ * @class Pawn
+ * @brief Шахматная фигура - пешка
+ */
 class Pawn : public Figure {
 public:
 	Pawn(Point pos, FigureColor color);
-	const virtual std::vector<Move> getMoves(const Board *b);
-	virtual Pawn* copy();
+	std::vector<Move> getMoves(Board *b) const;
+	Pawn* copy() const;
 };
 
 #endif

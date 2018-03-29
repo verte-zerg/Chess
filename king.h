@@ -8,11 +8,15 @@
 #include "figure.h"
 #include "board.h"
 
+/**
+ * @class King
+ * @brief Шахматная фигура - король
+ */
 class King : public Figure {
 public:
 	King(Point pos, FigureColor color);
-	const virtual std::vector<Move> getMoves(const Board *b);
-	virtual King* copy();
+	std::vector<Move> getMoves(Board *b) const;
+	King* copy() const;
 };
 
 #endif

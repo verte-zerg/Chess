@@ -8,11 +8,15 @@
 #include "figure.h"
 #include "board.h"
 
+/**
+ * @class Rook
+ * @brief Шахматная фигура - ладья
+ */
 class Rook : public Figure {
 public:
 	Rook(Point pos, FigureColor color);
-	const virtual std::vector<Move> getMoves(const Board *b);
-	virtual Rook* copy();
+	std::vector<Move> getMoves(Board *b) const;
+	Rook* copy() const;
 };
 
 #endif

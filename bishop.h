@@ -8,11 +8,15 @@
 #include "figure.h"
 #include "board.h"
 
+/**
+ * @class Bishop
+ * @brief Шахматная фигура - слон
+ */
 class Bishop : public Figure {
 public:
 	Bishop(Point pos, FigureColor color);
-	const virtual std::vector<Move> getMoves(const Board *b);
-	virtual Bishop* copy();
+	std::vector<Move> getMoves(Board *b) const;
+	Bishop* copy() const;
 };
 
 #endif
