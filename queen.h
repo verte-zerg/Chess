@@ -24,7 +24,7 @@ public:
 	 * @param moves Список ходов, куда нужно записать новые ходы
 	 * @param b Доска, на которой происходит поиск ходов
 	 */
-	void findChess(int dx, int dy, std::vector<Move>& moves, Board* b) const;
+	void findChess(short dx, short dy, std::vector<Move>& moves, Board* b) const;
 
 	std::vector<Move> getMoves(Board *b) const;
 	Figure* copy() const;

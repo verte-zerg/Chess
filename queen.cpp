@@ -2,7 +2,7 @@
 
 Queen::Queen(Point _pos, FigureColor _figureColor): Figure(_pos, _figureColor) {};
 
-void Queen::findChess(int dx, int dy, std::vector<Move>& moves, Board* b) const
+void Queen::findChess(short dx, short dy, std::vector<Move>& moves, Board* b) const
 {
 	Point from = pos;
 	while (true)
@@ -27,7 +27,6 @@ void Queen::findChess(int dx, int dy, std::vector<Move>& moves, Board* b) const
 	}
 }
 
-
 std::vector<Move> Queen::getMoves(Board *b) const
 {
     std::vector<Move> moves;
@@ -44,8 +43,7 @@ std::vector<Move> Queen::getMoves(Board *b) const
     return moves;
 }
 
-
 Figure* Queen::copy() const
 {
-    Figure* f = new Queen(pos, color);
+    return new Queen(pos, color);    
 }
