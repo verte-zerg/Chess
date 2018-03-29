@@ -11,11 +11,11 @@ class Board;
 
 class Figure {
 public:     
-    const virtual std::vector<Move> getMoves(const Board* b) = 0;   
     Point pos;
     FigureColor color;
 
-    Figure(Point _pos, FigureColor _color);
+    const virtual std::vector<Move> getMoves(const Board* b) = 0;   
+    Figure(Point _pos, FigureColor _color); 
     virtual Figure* copy() = 0;
 };
 

@@ -36,12 +36,19 @@ public:
     std::stack<Figure*> cemetery; ///< Кладбище фигур
     
     /**
-     * @brief Функция перемещения фигуры
+     * @brief Перемещения фигуры
      * 
      * @param move Ход, который нужно сделать
      */
     void moveFigure(Move move);
     
+
+    /**
+     * @brief Добавление фигуры
+     * 
+     * @param figure Фигура, которую нужно добавить     
+     */
+    void addFirure(Figure* figure);
 
     /**
      * @brief Расстановка фигур в начальные состояние
