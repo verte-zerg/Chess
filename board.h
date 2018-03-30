@@ -2,7 +2,7 @@
 #define BOARD_H
 
 #include <vector>
-#include <stack>
+#include <list>
 #include "figure.h"
 #include "move.h"
 #include "point.h"
@@ -33,7 +33,7 @@ public:
     std::vector<Move> movesHistory; ///< История ходов
     std::vector<Figure*> whiteFigures; ///< Указатели на фигуры игрока Белый
     std::vector<Figure*> blackFigures; ///< Указатель на фигуры игрока Черный
-    std::stack<Figure*> cemetery; ///< Кладбище фигур
+    std::list<Figure*> cemetery; ///< Кладбище фигур
     
     /**
      * @brief Перемещения фигуры

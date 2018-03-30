@@ -27,5 +27,17 @@ int main()
     plW.join();
     plB.join();
 
+    /* Test figure
+    Board* b = new Board();
+    b->arrangement();
+
+    Knight r(Point(1,0), FigureColor::white);
+
+    std::vector<Move> moves = r.getMoves(b);
+
+    for (size_t i = 0; i < moves.size(); i++)
+        std::cout << moves[i].to.x << ":" << moves[i].to.y << std::endl;
+    */
+
     return 0;
 }

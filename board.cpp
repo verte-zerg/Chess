@@ -4,24 +4,24 @@
 #include "allFigures.h"
 
 void Board::moveFigure(Move move) {
-    //Добавить обработку взятия на проходе
+    //Добавить обработку взятия на проходе и рокировку
     if ((*this)[move.to] != NULL)
     {
-        cemetery.push((*this)[move.to]);
+        cemetery.push_back((*this)[move.to]);
 
         for (int i = 0; i < whiteFigures.size(); i++)
-            if (move.from == whiteFigures[i]->pos)
+            if (move.to == whiteFigures[i]->pos)
                 whiteFigures.erase(whiteFigures.begin() + i);
 
         for (int i = 0; i < blackFigures.size(); i++)
-            if (move.from == blackFigures[i]->pos)
+            if (move.to == blackFigures[i]->pos)
                 blackFigures.erase(blackFigures.begin() + i);
     }
 
     movesHistory.push_back(move);
 
     (*this)[move.to] = (*this)[move.from];
-    (*this)[move.to] = NULL;
+    (*this)[move.from] = NULL;
 }
 
 Board::Board() {}
@@ -41,20 +41,12 @@ Board::Board(Board& b)
                     blackFigures.push_back(f);                    
             }
     
-    //Копирование кладбища
-    std::stack<Figure*> copyCemetery(cemetery);
-    std::stack<Figure*> reverseCopyCemetery;
+    std::list<Figure*> copyCemetery(b.cemetery);
 
     while (!copyCemetery.empty())
     {
-        reverseCopyCemetery.push(copyCemetery.top());
-        copyCemetery.pop();
-    }
-
-    while (!reverseCopyCemetery.empty())
-    {
-        cemetery.push(reverseCopyCemetery.top()->copy());
-        reverseCopyCemetery.pop();
+        cemetery.push_front(copyCemetery.back());
+        copyCemetery.pop_back();
     }
     
     movesHistory = std::vector<Move>(b.movesHistory);
@@ -65,6 +57,8 @@ void Board::addFirure(Figure* figure)
     (*this)[figure->pos] = figure;
     if (figure->color == FigureColor::white)
         whiteFigures.push_back(figure);
+    if (figure->color == FigureColor::black)
+        blackFigures.push_back(figure);
 }
 
 void Board::arrangement() 
@@ -76,7 +70,8 @@ void Board::arrangement()
         addFirure(new Pawn(Point(i, 1),  FigureColor::white));
         addFirure(new Pawn(Point(i, 6),  FigureColor::black));       
     }    
-
+    */
+   
     //Добавляем ладей
     addFirure(new Rook(Point(0, 0),  FigureColor::white));
     addFirure(new Rook(Point(7, 0),  FigureColor::white));
@@ -102,7 +97,6 @@ void Board::arrangement()
     //Добавление королей
     addFirure(new King(Point(4, 0),  FigureColor::white));
     addFirure(new King(Point(4, 7),  FigureColor::black));
-    */
 }
 
 
@@ -119,7 +113,8 @@ void Board::undoMove() {
 
     if (lastMove.isAttack)
     {        
-        Figure* deadFigure = cemetery.top();
+        Figure* deadFigure = cemetery.back();
+
         (*this)[lastMove.to] = deadFigure;
 
         if (deadFigure->color == FigureColor::white)
@@ -127,6 +122,6 @@ void Board::undoMove() {
         if (deadFigure->color == FigureColor::black)
             blackFigures.push_back(deadFigure);
 
-        cemetery.pop();      
+        cemetery.pop_back();
     }
 }
