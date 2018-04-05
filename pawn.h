@@ -16,7 +16,7 @@ class Pawn : public Figure {
 public:
 	Pawn(Point pos, FigureColor color);
 	std::vector<Move> getMoves(Board *b) const;
-	Pawn* copy() const;
+	Figure* copy() const;
 };
 
 #endif

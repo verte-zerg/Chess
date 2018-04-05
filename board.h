@@ -15,6 +15,8 @@ typedef Figure* figurePtr;
  * 
  */
 class Board {
+    figurePtr board[8][8]; ///< Массив указателей на фигуры на доске
+    std::list<Figure*> cemetery; ///< Кладбище фигур
 public: 
     /**
      * @brief Конструктор класса доска по умолчанию
@@ -28,12 +30,10 @@ public:
      * @param b Доска, которую нужно клонировать    
      */
     Board(Board& b);
-
-    figurePtr board[8][8]; ///< Массив указателей на фигуры на доске
+    
     std::vector<Move> movesHistory; ///< История ходов
     std::vector<Figure*> whiteFigures; ///< Указатели на фигуры игрока Белый
     std::vector<Figure*> blackFigures; ///< Указатель на фигуры игрока Черный
-    std::list<Figure*> cemetery; ///< Кладбище фигур
     
     /**
      * @brief Перемещения фигуры
@@ -49,6 +49,13 @@ public:
      * @param figure Фигура, которую нужно добавить     
      */
     void addFirure(Figure* figure);
+
+    /**
+     * @brief Удаление фигуры
+     * 
+     * @param pos Позиция, с которой нужно удалить фигуру     
+     */
+    void delFirure(Point pos);
 
     /**
      * @brief Расстановка фигур в начальные состояние

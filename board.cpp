@@ -2,20 +2,33 @@
 #include <cstddef>
 #include "figureColor.h"
 #include "allFigures.h"
+#include <typeinfo>
 
 void Board::moveFigure(Move move) {
     //Добавить обработку взятия на проходе и рокировку
     if ((*this)[move.to] != NULL)
     {
         cemetery.push_back((*this)[move.to]);
+        delFirure(move.to);
+    }
 
-        for (int i = 0; i < whiteFigures.size(); i++)
-            if (move.to == whiteFigures[i]->pos)
-                whiteFigures.erase(whiteFigures.begin() + i);
+    //Трансформация фигуры;
+    if (typeid(*(*this)[move.from]) == typeid(Pawn) && move.figureName != FigureName::pawn)
+    {      
+        switch (move.figureName)
+        {
+            case FigureName::queen : addFirure(new Queen(move.from, (*this)[move.from]->color));
+                break;
+            case FigureName::rook : addFirure(new Rook(move.from, (*this)[move.from]->color));
+                break;
+            case FigureName::bishop : addFirure(new Bishop(move.from, (*this)[move.from]->color));
+                break;
+            case FigureName::knight : addFirure(new Knight(move.from, (*this)[move.from]->color));
+                break;
+        }
 
-        for (int i = 0; i < blackFigures.size(); i++)
-            if (move.to == blackFigures[i]->pos)
-                blackFigures.erase(blackFigures.begin() + i);
+        delFirure(move.to);
+        move.figureName = FigureName::pawn;
     }
 
     movesHistory.push_back(move);
@@ -61,16 +74,27 @@ void Board::addFirure(Figure* figure)
         blackFigures.push_back(figure);
 }
 
-void Board::arrangement() 
+void Board::delFirure(Point pos)
 {
-    /*
+    for (int i = 0; i < whiteFigures.size(); i++)
+        if (pos == whiteFigures[i]->pos)
+            whiteFigures.erase(whiteFigures.begin() + i);
+
+    for (int i = 0; i < blackFigures.size(); i++)
+        if (pos == blackFigures[i]->pos)
+            blackFigures.erase(blackFigures.begin() + i);
+
+    (*this)[pos] = NULL;
+}
+
+void Board::arrangement() 
+{    
     //Добавляем пешки
     for (int i = 0; i < 8; i++)
     {
         addFirure(new Pawn(Point(i, 1),  FigureColor::white));
         addFirure(new Pawn(Point(i, 6),  FigureColor::black));       
     }    
-    */
    
     //Добавляем ладей
     addFirure(new Rook(Point(0, 0),  FigureColor::white));
@@ -106,8 +130,11 @@ figurePtr& Board::operator[](Point pos)
 }
 
 
-void Board::undoMove() {
+void Board::undoMove() 
+{
+    //Добавить обработку отмены рокировки, взятия на проходе, трансформации
     Move lastMove = movesHistory[movesHistory.size() - 1];
+    movesHistory.pop_back();
 
     (*this)[lastMove.from] = (*this)[lastMove.to];
 
