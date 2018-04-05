@@ -3,7 +3,7 @@
 
 enum FigureName
 {
-    pawn,
+    pawn = 0,
     bishop,
     rook,
     knight,

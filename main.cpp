@@ -14,9 +14,42 @@ Message* msg = NULL;
 std::condition_variable checkMessage;
 std::mutex lockAccess;
 
+void addFig(std::string name, int x, int y, Board* b, FigureColor color)
+{
+    if ((*b)[Point(x, y)] != NULL)
+    {
+        std::cout << "В данной позиции находится другая фигура.\n";
+        return;
+    }
+
+    if (x > 7 || x < 0 || y > 7 || y < 0)
+    {
+        std::cout << "Данная позиции находится за пределами доски.\n";
+        return;
+    }
+
+    if (name == "K")
+        b->addFirure(new Knight(Point(x, y), color));
+    else if (name == "B")
+        b->addFirure(new Bishop(Point(x, y), color));
+    else if (name == "R")
+        b->addFirure(new Rook(Point(x, y), color));
+    else if (name == "Q")
+        b->addFirure(new Queen(Point(x, y), color));
+    else if (name == "Kg")
+        b->addFirure(new King(Point(x, y), color));
+    else
+    {
+        std::cout << "Неизвестное название фигуры.\n";
+        return;
+    }
+    //else if (name == "P")
+      //  b->addFirure(new Pawn(Point(x, y), color));
+}
+
 int main()
 {
-    Player playerWhite(Role::playerWhite), playerBlack(Role::playerBlack);
+    /*Player playerWhite(Role::playerWhite), playerBlack(Role::playerBlack);
     Manager manager;
 
     std::thread mng(&Manager::recieveMessage, std::ref(manager));
@@ -27,17 +60,84 @@ int main()
     plW.join();
     plB.join();
 
-    /* Test figure
+    Test figure*/
     Board* b = new Board();
-    b->arrangement();
 
-    Knight r(Point(1,0), FigureColor::white);
+    std::cout << "Стандартная расстановка (y(Yes), n(No))? ";
+    char ch;
+    std::cin >> ch;
+
+    if (ch == 'y')
+        b->arrangement();
+    else if (ch = 'n')
+    {
+        std::string in, name;
+        int x, y;
+        char parse[1];
+        FigureColor color = FigureColor::white;     
+        std::cout << "Ввод фигур в формате [Name][X][Y].\nСначала вводятся белые, после ввода '0' черные. Следующий ноль - завершение ввода.\n";   
+        while (true)
+        {                                    
+            std::cin >> in;            
+            if (in == "0")
+            {
+                if (color == FigureColor::white)
+                {
+                    color = FigureColor::black;
+                    std::cout << "Ввод черных фигур:\n";
+                    continue;
+                }
+                else
+                    break;
+            }  
+
+            for (uint i = 0; i < in.size(); i++)
+                if (in[i] == ' ')
+                {
+                    in.erase(i, 1);
+                    i--;
+                }
+
+            in.copy(parse, 1, in.size() - 2);
+            x = int(parse[0]) - 97;            
+            in.copy(parse, 1, in.size() - 1);
+            y = atoi(parse) - 1;
+            name = in.substr(0, in.size() - 2);
+            addFig(name, x, y, b, color);                        
+        }
+    }
+
+    std::string in;
+    int x, y;
+    char parse[1];
+    std::vector<Move> moves;
+    while (true)
+    {
+        std::cout << "Введите координаты фигуры: ";
+        std::cin >> in;
+        in.copy(parse, 1, 0);
+        x = int(parse[0]) - 97;            
+        in.copy(parse, 1, 1);
+        y = atoi(parse) - 1;
+        if ((*b)[Point(x, y)] == NULL)
+        {
+            std::cout << "В данной позиции фигур нет.\n";
+            continue;
+        }
+        moves = (*b)[Point(x, y)]->getMoves(b);
+        for (int i = 0; i < moves.size(); i++)
+            std::cout << moves[i] << std::endl;
+
+    }
+
+    /*Knight r(Point(1,0), FigureColor::white);
 
     std::vector<Move> moves = r.getMoves(b);
 
-    for (size_t i = 0; i < moves.size(); i++)
-        std::cout << moves[i].to.x << ":" << moves[i].to.y << std::endl;
-    */
+    for (uint i = 0; i < moves.size(); i++)
+        std::cout << moves[i] << std::endl;*/
+    
+
 
     return 0;
 }

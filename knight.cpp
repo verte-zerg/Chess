@@ -14,9 +14,8 @@ void Knight::findChess(short dx, short dy, std::vector<Move>& moves, Board* b) c
 	if ((*b)[to] != NULL)
 	{
 		if ((*b)[to]->color != color)
-			moves.push_back(Move(pos, to, true, FigureName::knight));
-		else
-			return;
+			moves.push_back(Move(pos, to, true, FigureName::knight));		
+		return;
 	}
 
 	moves.push_back(Move(pos, to, false, FigureName::knight));

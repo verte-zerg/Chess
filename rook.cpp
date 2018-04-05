@@ -18,8 +18,7 @@ void Rook::findChess(short dx, short dy, std::vector<Move>& moves, Board* b) con
 		{
 			if ((*b)[to]->color != color)
 				moves.push_back(Move(pos, to, true, FigureName::rook));
-			else
-				return;
+			return;
 		}
 
 		moves.push_back(Move(pos, to, false, FigureName::rook));
