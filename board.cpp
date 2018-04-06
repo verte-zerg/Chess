@@ -15,19 +15,20 @@ void Board::moveFigure(Move move) {
     //Трансформация фигуры;
     if (typeid(*(*this)[move.from]) == typeid(Pawn) && move.figureName != FigureName::pawn)
     {      
+        Figure* oldFigure = (*this)[move.from];
+        delFirure(move.from);
         switch (move.figureName)
         {
-            case FigureName::queen : addFirure(new Queen(move.from, (*this)[move.from]->color));
+            case FigureName::queen : addFirure(new Queen(move.from, oldFigure->color));
                 break;
-            case FigureName::rook : addFirure(new Rook(move.from, (*this)[move.from]->color));
+            case FigureName::rook : addFirure(new Rook(move.from, oldFigure->color));
                 break;
-            case FigureName::bishop : addFirure(new Bishop(move.from, (*this)[move.from]->color));
+            case FigureName::bishop : addFirure(new Bishop(move.from, oldFigure->color));
                 break;
-            case FigureName::knight : addFirure(new Knight(move.from, (*this)[move.from]->color));
+            case FigureName::knight : addFirure(new Knight(move.from, oldFigure->color));
                 break;
         }
-
-        delFirure(move.to);
+        
         move.figureName = FigureName::pawn;
     }
 
@@ -136,19 +137,19 @@ void Board::undoMove()
     Move lastMove = movesHistory[movesHistory.size() - 1];
     movesHistory.pop_back();
 
+    if (typeid(*(*this)[lastMove.to]) != typeid(Pawn) && lastMove.figureName == FigureName::pawn)
+    {
+        Figure* oldFigure = (*this)[lastMove.to];
+        delFirure(lastMove.to);
+        addFirure(new Pawn(lastMove.to, oldFigure->color));
+    }
+
     (*this)[lastMove.from] = (*this)[lastMove.to];
+    (*this)[lastMove.to] = NULL;
 
     if (lastMove.isAttack)
     {        
-        Figure* deadFigure = cemetery.back();
-
-        (*this)[lastMove.to] = deadFigure;
-
-        if (deadFigure->color == FigureColor::white)
-            whiteFigures.push_back(deadFigure);            
-        if (deadFigure->color == FigureColor::black)
-            blackFigures.push_back(deadFigure);
-
-        cemetery.pop_back();
+        addFirure(cemetery.back());
+        cemetery.pop_back();        
     }
 }
