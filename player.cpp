@@ -83,11 +83,11 @@ void Player::createPositions(Position* pos)
 
 Message* Player::thinking() 
 {
-    /*ownBoard = new Board(*globalBoard);
+    ownBoard = new Board(*globalBoard);
     Position initPos(0, role);
-    createPositions(&initPos);*/
+    createPositions(&initPos);
 
-    Message* m = new Message(Role::manager, Move());//initPos.bestNextMove);    
+    Message* m = new Message(Role::manager, initPos.bestNextMove);    
 
     //По приколу ждем
     std::this_thread::sleep_for(std::chrono::milliseconds{3000});        
