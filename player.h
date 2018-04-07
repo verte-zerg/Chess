@@ -1,28 +1,59 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "message.h"
-#include "manager.h"
 #include "role.h"
-//#include <iostream>
+#include "board.h"
+#include "position.h"
+#include "message.h"
 
-class Player {
-public: 
-    Player(Role role);
-    void thinking();
-    void recieveMessage();    
-
-private: 
-    
-    Role role;
-    double datumPos;
-    
-    double costFunc();    
-    
+class Player
+{
+	const uint calcDepth; ///< Глубина просчета в полуходах
+	const Role role; ///< Цвет игрока
+	Board* ownBoard; ///< Собственная доска
+	
     /**
-     * @param m
+     * @brief 
+     * 
+     * @param pos 
+     * @return double 
      */
-    void sendMessage(Message m);
+	double costFunc(const Position* pos);
+
+    /**
+     * @brief Функция, просчитывающая лучший ход 
+     * 
+     * @return Message* Возвращает лучший ход
+     */
+	Message* thinking();
+
+    /**
+     * @brief Рекурсивная функция, строящее дерево выбора лучшего хода
+     * 
+     * @param initPos Начальная позиция 
+     */
+	void createPositions(Position* initPos);
+
+    /**
+     * @brief Функция отправки сообщения
+     * 
+     * @param m Сообщение, которое нужно отправить
+     */
+    void sendMessage(Message* m);
+
+public:
+    /**
+     * @brief Конструктор класса игрок
+     * 
+     * @param _role Цвет игрока
+     * @param _calcDepth Глубина просчета в полуходах
+     */
+	Player(Role _role, uint _calcDepth);
+
+    /**
+     * @brief Функция ожидания приёма сообщения
+     */
+    void recieveMessage();    
 };
 
 #endif

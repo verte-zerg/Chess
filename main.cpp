@@ -9,6 +9,9 @@
 #include "point.h"
 #include "figureColor.h"
 #include "allFigures.h"
+#include "role.h"
+
+Board* globalBoard;
 
 Message* msg = NULL;
 std::condition_variable checkMessage;
@@ -47,22 +50,8 @@ void addFig(std::string name, int x, int y, Board* b, FigureColor color)
       //  b->addFirure(new Pawn(Point(x, y), color));
 }
 
-int main()
+void consoleArrangement(Board* b)
 {
-    /*Player playerWhite(Role::playerWhite), playerBlack(Role::playerBlack);
-    Manager manager;
-
-    std::thread mng(&Manager::recieveMessage, std::ref(manager));
-    std::thread plW(&Player::recieveMessage, std::ref(playerWhite));
-    std::thread plB(&Player::recieveMessage, std::ref(playerBlack));
-
-    mng.join();
-    plW.join();
-    plB.join();
-
-    Test figure*/
-    Board* b = new Board();
-
     std::cout << "Стандартная расстановка (y(Yes), n(No))? ";
     char ch;
     std::cin >> ch;
@@ -106,7 +95,10 @@ int main()
             addFig(name, x, y, b, color);                        
         }
     }
+}
 
+void loopGetMoves(Board* b)
+{
     std::string in;
     int x, y;
     char parse[1];
@@ -127,17 +119,27 @@ int main()
         moves = (*b)[Point(x, y)]->getMoves(b);
         for (int i = 0; i < moves.size(); i++)
             std::cout << moves[i] << std::endl;
-
     }
+}
 
-    /*Knight r(Point(1,0), FigureColor::white);
+int main()
+{
+    //Normal game
+    /*Player playerWhite(Role::playerWhite, 1), playerBlack(Role::playerBlack, 1);
+    Manager manager;
 
-    std::vector<Move> moves = r.getMoves(b);
+    std::thread mng(&Manager::recieveMessage, std::ref(manager));
+    std::thread plW(&Player::recieveMessage, std::ref(playerWhite));
+    std::thread plB(&Player::recieveMessage, std::ref(playerBlack));
 
-    for (uint i = 0; i < moves.size(); i++)
-        std::cout << moves[i] << std::endl;*/
-    
+    mng.join();
+    plW.join();
+    plB.join();*/
 
+    //Console game test
+    globalBoard = new Board();
+    consoleArrangement(globalBoard);
+    loopGetMoves(globalBoard);
 
     return 0;
 }
