@@ -1,6 +1,6 @@
 #include "king.h"
 
-King::King(Point _pos, FigureColor _figureColor) : Figure(_pos, _figureColor) {};
+King::King(Point _pos, FigureColor _figureColor) : Figure(_pos, _figureColor, FigureName::king) {};
 
 void King::findChess(short dx, short dy, std::vector<Move>& moves, Board* b) const
 {

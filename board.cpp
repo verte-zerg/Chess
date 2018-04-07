@@ -13,7 +13,7 @@ void Board::moveFigure(Move move) {
     }
 
     //Трансформация фигуры;
-    if (typeid(*(*this)[move.from]) == typeid(Pawn) && move.figureName != FigureName::pawn)
+    if ((*this)[move.from]->name == FigureName::pawn && move.figureName != FigureName::pawn)
     {      
         Figure* oldFigure = (*this)[move.from];
         delFirure(move.from);
@@ -41,7 +41,7 @@ void Board::moveFigure(Move move) {
 Board::Board() {}
 
 
-Board::Board(Board& b) 
+Board::Board(Board& b)
 {    
     for (int i = 0; i < 8; i++)
         for (int j = 0; j < 8; j++)
@@ -137,7 +137,7 @@ void Board::undoMove()
     Move lastMove = movesHistory[movesHistory.size() - 1];
     movesHistory.pop_back();
 
-    if (typeid(*(*this)[lastMove.to]) != typeid(Pawn) && lastMove.figureName == FigureName::pawn)
+    if ((*this)[lastMove.to]->name != FigureName::pawn && lastMove.figureName == FigureName::pawn)
     {
         Figure* oldFigure = (*this)[lastMove.to];
         delFirure(lastMove.to);

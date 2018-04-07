@@ -1,6 +1,6 @@
 #include "bishop.h"
 
-Bishop::Bishop(Point _pos, FigureColor _figureColor) : Figure(_pos, _figureColor) {};
+Bishop::Bishop(Point _pos, FigureColor _figureColor) : Figure(_pos, _figureColor, FigureName::bishop) {};
 
 void Bishop::findChess(short dx, short dy, std::vector<Move>& moves, Board* b) const
 {

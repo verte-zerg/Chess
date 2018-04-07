@@ -5,6 +5,7 @@
 #include "point.h"
 #include "move.h"
 #include "figureColor.h"
+#include "figureName.h"
 #include "figure.h"
 #include "board.h"
 

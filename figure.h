@@ -17,6 +17,7 @@ class Figure {
 public:     
     Point pos; ///< Позиция фигуры
     FigureColor color; ///< Цвет фигуры
+    const FigureName name; ///< Тип фигуры
 
     /**
      * @brief Возвращает список возможных ходов
@@ -32,7 +33,7 @@ public:
      * @param _pos Позиция фигуры
      * @param _color Цвет фигуры
      */
-    Figure(Point _pos, FigureColor _color): pos(_pos), color(_color) {};   
+    Figure(Point _pos, FigureColor _color, FigureName _name): pos(_pos), color(_color), name(_name) {};   
 
     /**
      * @brief Конструктор копирования

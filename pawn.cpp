@@ -1,6 +1,6 @@
 #include "pawn.h"
 
-Pawn::Pawn(Point _pos, FigureColor _figureColor) : Figure(_pos, _figureColor) {};
+Pawn::Pawn(Point _pos, FigureColor _figureColor) : Figure(_pos, _figureColor, FigureName::pawn) {};
 
 std::vector<Move> Pawn::getMoves(Board *b) const
 {

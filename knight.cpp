@@ -1,6 +1,6 @@
 #include "knight.h"
 
-Knight::Knight(Point _pos, FigureColor _figureColor) : Figure(_pos, _figureColor) {};
+Knight::Knight(Point _pos, FigureColor _figureColor) : Figure(_pos, _figureColor, FigureName::knight) {};
 
 void Knight::findChess(short dx, short dy, std::vector<Move>& moves, Board* b) const
 {
