@@ -10,9 +10,6 @@ private:
 
     void plot();
     
-    /**
-     * @param m
-     */
     void sendMessage(Message* m);
 
     void processingOfMessage();

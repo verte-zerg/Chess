@@ -1,10 +1,7 @@
-/**
- * Project Chess
- */
-
 #include <condition_variable>
 #include <thread>
 #include <mutex>
+#include "board.h"
 #include <iostream>
 
 #include "manager.h"
@@ -37,10 +34,8 @@ void Manager::sendMessage(Message* m)
 
 void Manager::processingOfMessage()
 {
-    Message* m = new Message();
-    m->reciever = (Role)(!state);
-    state = (Role)(!state);
-    m->type = 2;
+    state = (Role)(!state);    
+    Message* m = new Message(state, Move());
     
     std::this_thread::sleep_for(std::chrono::milliseconds{2000});
     
@@ -49,16 +44,15 @@ void Manager::processingOfMessage()
     checkMessage.notify_all();
 }
 
-/**
- * @return Message
- */
-void Manager::recieveMessage() {
+void Manager::recieveMessage() 
+{
+    //Ожидание привязки всех на условную переменную
     std::this_thread::sleep_for(std::chrono::seconds{3});
 
-    Message* m = new Message();
-    m->reciever = Role::playerWhite;
-    state = Role::playerWhite;
-    m->type = 1;    
+    Message* m = new Message(Role::playerWhite, Move());   
+
+    //Первый ход белых 
+    state = Role::playerWhite;      
 
     sendMessage(m);
 
