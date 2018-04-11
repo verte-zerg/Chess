@@ -42,6 +42,11 @@ public:
      */
     virtual Figure* copy() const = 0;
 
+    /**
+     * @brief Оценка ценности фигуры в текущем положении
+     * 
+     * @return double Ценность фигуры
+     */
     virtual double getCost() const = 0;
 };
 
