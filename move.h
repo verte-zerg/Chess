@@ -7,8 +7,7 @@
 #include <cstring>
 
 /**
- * @brief Класс, 
- * 
+ * @brief Класс Move
  */
 struct Move {
 public: 
@@ -60,7 +59,7 @@ public:
         default:
             break;
         }
-        os << name << char(97 + m.from.x) << m.from.y + 1 << " " << char(97 + m.to.x) << m.to.y + 1;
+        os << name << char(97 + m.from.x) << m.from.y + 1 << " " << char(97 + m.to.x) << m.to.y + 1 << (m.isAttack ? " kill" : "");
         return os;
     }
 };

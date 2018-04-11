@@ -10,6 +10,8 @@
  * Manager implementation
  */
 
+extern Board* globalBoard;
+
 extern Message* msg;
 extern std::condition_variable checkMessage;
 extern std::mutex lockAccess;
@@ -22,9 +24,47 @@ void Manager::plot() {
 
 }
 
-/**
- * @param m
- */
+void plotInConsole()
+{
+    std::cout << std::endl;
+    for (int i = 7; i >= 0; i--)
+    {
+        for (int j = 0; j < 8; j++)
+            if ((*globalBoard)[Point(j, i)] != NULL)
+            {
+                std::string name;
+                switch ((*globalBoard)[Point(j, i)]->name)
+                {
+                    case FigureName::pawn : name = " ";
+                        break;
+                    case FigureName::knight : name = "K";
+                        break;
+                    case FigureName::bishop : name = "B";
+                        break;
+                    case FigureName::rook : name = "R";
+                        break;
+                    case FigureName::queen : name = "Q";
+                        break;
+                    case FigureName::king : name = "W";
+                        break;
+                default:
+                    break;
+                }
+                if ((*globalBoard)[Point(j, i)]->color == FigureColor::white)
+                    name += "1"; 
+                else
+                    name += "2";
+                std::cout << '|' << name << '|';
+            }
+            else
+                std::cout << "|  |";
+        std::cout << std::endl;
+        for (uint k = 0; k < 8; k++)
+            std::cout << "----";
+        std::cout << std::endl;
+    }
+}
+
 void Manager::sendMessage(Message* m) 
 {
     std::unique_lock<std::mutex> locker(lockAccess);
@@ -34,6 +74,8 @@ void Manager::sendMessage(Message* m)
 
 void Manager::processingOfMessage()
 {
+    globalBoard->moveFigure(msg->move);
+    plotInConsole();
     state = (Role)(!state);    
     Message* m = new Message(state, Move());
     
@@ -75,8 +117,7 @@ void Manager::recieveMessage()
 
         if (msg->reciever == Role::manager)
         {
-            std::cout << "Менеджер принял." << std::endl;                       
-            msg = NULL;
+            std::cout << "Менеджер принял." << std::endl;                                   
             locker.unlock();   
             processingOfMessage();       
         }

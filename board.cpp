@@ -5,6 +5,10 @@
 #include <typeinfo>
 
 void Board::moveFigure(Move move) {
+    movesHistory.push_back(move);
+    
+    if (move.to == move.from)
+        return;
     //Добавить обработку взятия на проходе и рокировку
     if ((*this)[move.to] != NULL)
     {
@@ -32,8 +36,7 @@ void Board::moveFigure(Move move) {
         move.figureName = FigureName::pawn;
     }
 
-    movesHistory.push_back(move);
-
+    (*this)[move.from]->pos = move.to;
     (*this)[move.to] = (*this)[move.from];
     (*this)[move.from] = NULL;
 }
@@ -66,6 +69,22 @@ Board::Board(Board& b)
     movesHistory = std::vector<Move>(b.movesHistory);
 }
 
+std::vector<Figure*>& Board::getEnemyFigures(Role _role)
+{
+    if (_role == Role::playerWhite)
+        return blackFigures;
+    else if (_role == Role::playerBlack)
+        return whiteFigures;
+}
+
+std::vector<Figure*>& Board::getOwnFigures(Role _role)
+{
+    if (_role == Role::playerWhite)
+        return whiteFigures;
+    else if (_role == Role::playerBlack)
+        return blackFigures;
+}
+
 void Board::addFirure(Figure* figure)
 {
     (*this)[figure->pos] = figure;
@@ -95,7 +114,7 @@ void Board::arrangement()
     {
         addFirure(new Pawn(Point(i, 1),  FigureColor::white));
         addFirure(new Pawn(Point(i, 6),  FigureColor::black));       
-    }    
+    } 
    
     //Добавляем ладей
     addFirure(new Rook(Point(0, 0),  FigureColor::white));
@@ -137,6 +156,9 @@ void Board::undoMove()
     Move lastMove = movesHistory[movesHistory.size() - 1];
     movesHistory.pop_back();
 
+    if (lastMove.to == lastMove.from)
+        return;
+
     if ((*this)[lastMove.to]->name != FigureName::pawn && lastMove.figureName == FigureName::pawn)
     {
         Figure* oldFigure = (*this)[lastMove.to];
@@ -144,6 +166,7 @@ void Board::undoMove()
         addFirure(new Pawn(lastMove.to, oldFigure->color));
     }
 
+    (*this)[lastMove.to]->pos = lastMove.from; 
     (*this)[lastMove.from] = (*this)[lastMove.to];
     (*this)[lastMove.to] = NULL;
 

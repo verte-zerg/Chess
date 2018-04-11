@@ -2,6 +2,7 @@
 #include <thread>
 #include <mutex>
 #include <iostream>
+#include <fstream>
 
 #include "board.h"
 #include "player.h"
@@ -52,9 +53,11 @@ void addFig(std::string name, int x, int y, Board* b, FigureColor color)
 
 void consoleArrangement(Board* b)
 {
-    std::cout << "Стандартная расстановка (y(Yes), n(No))? ";
+    //std::cout << "Стандартная расстановка (y(Yes), n(No))? ";
+
     char ch;
-    std::cin >> ch;
+    std::ifstream input("input");
+    input >> ch;
 
     if (ch == 'y')
         b->arrangement();
@@ -64,16 +67,16 @@ void consoleArrangement(Board* b)
         int x, y;
         char parse[1];
         FigureColor color = FigureColor::white;     
-        std::cout << "Ввод фигур в формате [Name][X][Y].\nСначала вводятся белые, после ввода '0' черные. Следующий ноль - завершение ввода.\n";   
+        //std::cout << "Ввод фигур в формате [Name][X][Y].\nСначала вводятся белые, после ввода '0' черные. Следующий ноль - завершение ввода.\n";   
         while (true)
         {                                    
-            std::cin >> in;            
+            input >> in;            
             if (in == "0")
             {
                 if (color == FigureColor::white)
                 {
                     color = FigureColor::black;
-                    std::cout << "Ввод черных фигур:\n";
+                    //std::cout << "Ввод черных фигур:\n";
                     continue;
                 }
                 else
@@ -124,8 +127,13 @@ void loopGetMoves(Board* b)
 
 int main()
 {
+    globalBoard = new Board();            
+    consoleArrangement(globalBoard);
+    plotInConsole();
+    //loopGetMoves(globalBoard);
+
     //Normal game
-    /*Player playerWhite(Role::playerWhite, 1), playerBlack(Role::playerBlack, 1);
+    Player playerWhite(Role::playerWhite, 3), playerBlack(Role::playerBlack, 3);
     Manager manager;
 
     std::thread mng(&Manager::recieveMessage, std::ref(manager));
@@ -134,12 +142,7 @@ int main()
 
     mng.join();
     plW.join();
-    plB.join();*/
-
-    //Console game test
-    globalBoard = new Board();
-    consoleArrangement(globalBoard);
-    loopGetMoves(globalBoard);
+    plB.join();
 
     return 0;
 }

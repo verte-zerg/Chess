@@ -4,6 +4,8 @@
 #include "message.h"
 #include "role.h"
 
+void plotInConsole();
+
 class Manager {
 private: 
     Role state;

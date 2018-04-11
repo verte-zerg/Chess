@@ -6,6 +6,7 @@
 #include "figure.h"
 #include "move.h"
 #include "point.h"
+#include "role.h"
 
 class Figure;
 typedef Figure* figurePtr;
@@ -71,6 +72,18 @@ public:
      */
     figurePtr& operator[](Point pos);
     
+    /**
+     * @brief Получение списка вражеских фигур
+     * @param _role Цвет игрока, по отношению к которому фигуры являются вражескими
+     */
+    std::vector<Figure*>& getEnemyFigures(Role _role);
+
+    /**
+     * @brief Получение списка собственных фигур
+     * @param _role Цвет игрока, фигуры которого нужно получить
+     */
+    std::vector<Figure*>& getOwnFigures(Role _role);
+
     /**
      * @brief Функция отмены последего хода
      * 
