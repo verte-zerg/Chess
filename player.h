@@ -1,6 +1,5 @@
 #ifndef PLAYER_H
 #define PLAYER_H
-
 #include "role.h"
 #include "board.h"
 #include "position.h"
@@ -32,7 +31,7 @@ class Player
      * 
      * @param initPos Начальная позиция 
      */
-	void createPositions(Position* initPos);
+	Move getBestMove();
 
     /**
      * @brief Функция отправки сообщения

@@ -15,79 +15,70 @@ extern Message *msg;
 
 Player::Player(Role _role, uint _calcDepth = 1): role(_role), calcDepth(_calcDepth) {};
 
-double Player::costFunc(const Position* pos) 
+double Player::costFunc(const Position* pos)
 {
-    return 1.;
+	int cost = 0;	
+	short int k = 1;
+
+    for (uint i = 0; i < 8; i++)
+		for (uint j = 0; j < 8; j++)
+			if ((*ownBoard)[Point(i, j)] != NULL)
+			{
+				if (role == (int)(*ownBoard)[Point(i, j)]->color)
+					k = 1;
+				else
+					k = -1;
+				switch ((*ownBoard)[Point(i, j)]->name)
+				{
+					case FigureName::pawn : cost += 10*k;
+						break;
+					case FigureName::knight : cost += 30*k;
+						break;
+					case FigureName::bishop : cost += 30*k;
+						break;
+					case FigureName::rook : cost += 50*k;
+						break;
+					case FigureName::queen : cost += 90*k;
+						break;
+					case FigureName::king : cost += 9000*k;
+						break;
+				}
+			}
+	return cost;
 }
 
-void Player::createPositions(Position* pos)
+Move Player::getBestMove()
 { 
-	if (pos->depth != 0) 
-		ownBoard->moveFigure(pos->lastMove);
+	Position initPos(calcDepth, role);
+	initPos.canvass(ownBoard, role);
 
-    if (pos->depth == calcDepth)
+	Move bestMove = initPos.possibleMoves[0];
+	int bestAssessment = -1.e8;
+	int tmp;	
+
+	for (uint i = 0; i < initPos.possibleMoves.size(); i++)
 	{
-		pos->bestAssessment = costFunc(pos);
-		return;
-	}
-
-	pos->canvass(ownBoard);
-
-    //Слежение за ролью
-	Role r = ((pos->whoseRole == playerWhite) ? playerBlack : playerWhite);
-	
-	for(unsigned i = 0; i < pos->possibleMoves.size(); i++)
-	{
-		Position* pPos = new Position(pos->depth + 1, r); //когда удалится???
-		pos->next.push_back(pPos);
-		pPos->lastMove = pos->possibleMoves[i];
-		pPos->prev = pos; 
-		//pPos->assessment = costFunc(pPos);
-		//if(pPos->badPos == true){
-			//delete pPos;
-		//}
-		createPositions(pPos);
-	}
-
-	if(pos->depth != 0) 
-		ownBoard->undoMove();
-
-	pos->bestAssessment = pos->next[0]->bestAssessment;
-	pos->bestNextMove = pos->next[0]->lastMove;
-
-	//Почему минимизируется только для черного игрока!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	if(pos->whoseRole == playerBlack)
-	{
-		for(uint i = 1; i < pos->next.size(); i++)
-		{
-			if(pos->next[i]->bestAssessment < pos->bestAssessment)
-			{
-				pos->bestAssessment = pos->next[i]->bestAssessment;
-				pos->bestNextMove = pos->next[i]->lastMove;
-			}
+		Position* newPos = new Position(calcDepth, role);
+		newPos->lastMove = initPos.possibleMoves[i];
+		tmp = newPos->getBestAssessment(ownBoard, 1);
+		//std::cout << "Move: " << newPos->lastMove << "; Cost: " << tmp << std::endl;
+		if (tmp > bestAssessment)	
+		{	
+			bestAssessment = tmp;	
+			bestMove = newPos->lastMove;
 		}	
 	}
-	else
-	{
-		for(uint i = 1; i < pos->next.size(); i++)
-		{
-			if(pos->next[i]->bestAssessment > pos->bestAssessment)
-			{
-				pos->bestAssessment = pos->next[i]->bestAssessment;
-				pos->bestNextMove = pos->next[i]->lastMove;
-			}
-		}
-	}	
+	
+	return bestMove;
 }
 
 
 Message* Player::thinking() 
 {
     ownBoard = new Board(*globalBoard);
-    Position initPos(0, role);
-    createPositions(&initPos);
+    
 
-    Message* m = new Message(Role::manager, initPos.bestNextMove);    
+    Message* m = new Message(Role::manager, Player::getBestMove());    
 
     //По приколу ждем
     std::this_thread::sleep_for(std::chrono::milliseconds{3000});        
@@ -106,7 +97,7 @@ void Player::recieveMessage() {
 
         if (msg->reciever != role)
         {
-            std::cout << "Игрок " << ((role == 0) ? "Белый" : "Черный") << " не принял. " << std::endl;            
+            //std::cout << "Игрок " << ((role == 0) ? "Белый" : "Черный") << " не принял. " << std::endl;            
             locker.unlock();
             continue;
         }
@@ -127,6 +118,6 @@ void Player::sendMessage(Message* m)
     std::unique_lock<std::mutex> locker(lockAccess);
     msg = m;   
 
-    std::cout << "Игрок " << ((role == 0) ? "Белый" : "Черный") << " отправил менеджеру. " << std::endl; 
+    std::cout << "Игрок " << ((role == 0) ? "Белый" : "Черный") << " отправил менеджеру ход: " << m->move << std::endl; 
     checkMessage.notify_all();
 }
