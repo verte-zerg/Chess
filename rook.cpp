@@ -17,11 +17,11 @@ void Rook::findChess(short dx, short dy, std::vector<Move>& moves, Board* b) con
 		if ((*b)[to] != NULL)
 		{
 			if ((*b)[to]->color != color)
-				moves.push_back(Move(pos, to, true, FigureName::rook));
+				moves.push_back(Move(pos, to, true, name));
 			return;
 		}
 
-		moves.push_back(Move(pos, to, false, FigureName::rook));
+		moves.push_back(Move(pos, to, false, name));
 		from = to;
 	}
 }
@@ -41,4 +41,12 @@ std::vector<Move> Rook::getMoves(Board *b) const
 Figure* Rook::copy() const
 {
 	return new Rook(pos, color);
+}
+
+double Rook::getCost() const
+{
+	if (color == FigureColor::white)
+		return cost + costPos[7 - pos.y][pos.x];
+	else
+		return cost + costPos[pos.y][7 - pos.x];
 }

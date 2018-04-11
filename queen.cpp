@@ -17,11 +17,11 @@ void Queen::findChess(short dx, short dy, std::vector<Move>& moves, Board* b) co
         if ((*b)[to] != NULL)
         {
             if ((*b)[to]->color != color)
-                moves.push_back(Move(pos, to, true, FigureName::queen));                            
+                moves.push_back(Move(pos, to, true, name));                            
             return;                
         }
 
-		moves.push_back(Move(pos, to, false, FigureName::queen));
+		moves.push_back(Move(pos, to, false, name));
 		from = to;
 	}
 }
@@ -45,4 +45,12 @@ std::vector<Move> Queen::getMoves(Board *b) const
 Figure* Queen::copy() const
 {
     return new Queen(pos, color);    
+}
+
+double Queen::getCost() const
+{
+	if (color == FigureColor::white)
+		return cost + costPos[7 - pos.y][pos.x];
+	else
+		return cost + costPos[pos.y][7 - pos.x];
 }

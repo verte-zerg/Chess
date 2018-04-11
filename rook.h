@@ -15,6 +15,20 @@
  */
 class Rook : public Figure {
 public:
+	const double cost = 500.;
+
+	const double costPos[8][8] 
+	{
+		{0,  0,  0,  0,  0,  0,  0,  0},
+		{5, 10, 10, 10, 10, 10, 10,  5},
+		{-5,  0,  0,  0,  0,  0,  0, -5},
+		{-5,  0,  0,  0,  0,  0,  0, -5},
+		{-5,  0,  0,  0,  0,  0,  0, -5},
+		{-5,  0,  0,  0,  0,  0,  0, -5},
+		{-5,  0,  0,  0,  0,  0,  0, -5},
+		{0,  0,  0,  5,  5,  0,  0,  }
+	};
+
 	Rook(Point pos, FigureColor color);
 	/**
 	 * @brief Поиск возможных ходов в заданном направлении
@@ -28,6 +42,7 @@ public:
 
 	std::vector<Move> getMoves(Board *b) const;
 	Figure* copy() const;
+	double getCost() const;
 };
 
 #endif

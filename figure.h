@@ -41,6 +41,8 @@ public:
      * @return Figure* Копия фигуры
      */
     virtual Figure* copy() const = 0;
+
+    virtual double getCost() const = 0;
 };
 
 #endif

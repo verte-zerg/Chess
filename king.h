@@ -15,7 +15,22 @@
 */
 class King : public Figure {
 public:
+	const double cost = 9000.;
+
+	const double costPos[8][8] 
+	{
+		{-30,-40,-40,-50,-50,-40,-40,-30},
+		{-30,-40,-40,-50,-50,-40,-40,-30},
+		{-30,-40,-40,-50,-50,-40,-40,-30},
+		{-30,-40,-40,-50,-50,-40,-40,-30},
+		{-20,-30,-30,-40,-40,-30,-30,-20},
+		{-10,-20,-20,-20,-20,-20,-20,-10},
+		{ 20, 20,  0,  0,  0,  0, 20, 20},
+		{ 20, 30, 10,  0,  0, 10, 30, 2}
+	};
+
 	King(Point pos, FigureColor color);
+	
 	/**
 	 * @brief Поиск возможных ходов в заданном направлении
 	 *
@@ -28,6 +43,7 @@ public:
 
 	std::vector<Move> getMoves(Board *b) const;
 	Figure* copy() const;
+	double getCost() const;
 };
 
 #endif
