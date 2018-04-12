@@ -13,23 +13,23 @@ void Board::moveFigure(Move move) {
     if ((*this)[move.to] != NULL)
     {
         cemetery.push_back((*this)[move.to]);
-        delFirure(move.to);
+        delFigure(move.to);
     }
 
     //Трансформация фигуры;
     if ((*this)[move.from]->name == FigureName::pawn && move.figureName != FigureName::pawn)
     {      
         Figure* oldFigure = (*this)[move.from];
-        delFirure(move.from);
+        delFigure(move.from);
         switch (move.figureName)
         {
-            case FigureName::queen : addFirure(new Queen(move.from, oldFigure->color));
+            case FigureName::queen : addFigure(new Queen(move.from, oldFigure->color));
                 break;
-            case FigureName::rook : addFirure(new Rook(move.from, oldFigure->color));
+            case FigureName::rook : addFigure(new Rook(move.from, oldFigure->color));
                 break;
-            case FigureName::bishop : addFirure(new Bishop(move.from, oldFigure->color));
+            case FigureName::bishop : addFigure(new Bishop(move.from, oldFigure->color));
                 break;
-            case FigureName::knight : addFirure(new Knight(move.from, oldFigure->color));
+            case FigureName::knight : addFigure(new Knight(move.from, oldFigure->color));
                 break;
         }
         
@@ -85,7 +85,7 @@ std::vector<Figure*>& Board::getOwnFigures(Role _role)
         return blackFigures;
 }
 
-void Board::addFirure(Figure* figure)
+void Board::addFigure(Figure* figure)
 {
     (*this)[figure->pos] = figure;
     if (figure->color == FigureColor::white)
@@ -94,7 +94,7 @@ void Board::addFirure(Figure* figure)
         blackFigures.push_back(figure);
 }
 
-void Board::delFirure(Point pos)
+void Board::delFigure(Point pos)
 {
     for (int i = 0; i < whiteFigures.size(); i++)
         if (pos == whiteFigures[i]->pos)
@@ -112,35 +112,35 @@ void Board::arrangement()
     //Добавляем пешки
     for (int i = 0; i < 8; i++)
     {
-        addFirure(new Pawn(Point(i, 1),  FigureColor::white));
-        addFirure(new Pawn(Point(i, 6),  FigureColor::black));       
+        addFigure(new Pawn(Point(i, 1),  FigureColor::white));
+        addFigure(new Pawn(Point(i, 6),  FigureColor::black));       
     } 
    
     //Добавляем ладей
-    addFirure(new Rook(Point(0, 0),  FigureColor::white));
-    addFirure(new Rook(Point(7, 0),  FigureColor::white));
-    addFirure(new Rook(Point(0, 7),  FigureColor::black));
-    addFirure(new Rook(Point(7, 7),  FigureColor::black));
+    addFigure(new Rook(Point(0, 0),  FigureColor::white));
+    addFigure(new Rook(Point(7, 0),  FigureColor::white));
+    addFigure(new Rook(Point(0, 7),  FigureColor::black));
+    addFigure(new Rook(Point(7, 7),  FigureColor::black));
 
     //Добавляем коней
-    addFirure(new Knight(Point(1, 0),  FigureColor::white));
-    addFirure(new Knight(Point(6, 0),  FigureColor::white));
-    addFirure(new Knight(Point(1, 7),  FigureColor::black));
-    addFirure(new Knight(Point(6, 7),  FigureColor::black));
+    addFigure(new Knight(Point(1, 0),  FigureColor::white));
+    addFigure(new Knight(Point(6, 0),  FigureColor::white));
+    addFigure(new Knight(Point(1, 7),  FigureColor::black));
+    addFigure(new Knight(Point(6, 7),  FigureColor::black));
 
     //Добавление слонов
-    addFirure(new Bishop(Point(2, 0),  FigureColor::white));
-    addFirure(new Bishop(Point(5, 0),  FigureColor::white));
-    addFirure(new Bishop(Point(2, 7),  FigureColor::black));
-    addFirure(new Bishop(Point(5, 7),  FigureColor::black));
+    addFigure(new Bishop(Point(2, 0),  FigureColor::white));
+    addFigure(new Bishop(Point(5, 0),  FigureColor::white));
+    addFigure(new Bishop(Point(2, 7),  FigureColor::black));
+    addFigure(new Bishop(Point(5, 7),  FigureColor::black));
 
     //Добавление королев
-    addFirure(new Queen(Point(3, 0),  FigureColor::white));
-    addFirure(new Queen(Point(3, 7),  FigureColor::black));
+    addFigure(new Queen(Point(3, 0),  FigureColor::white));
+    addFigure(new Queen(Point(3, 7),  FigureColor::black));
 
     //Добавление королей
-    addFirure(new King(Point(4, 0),  FigureColor::white));
-    addFirure(new King(Point(4, 7),  FigureColor::black));
+    addFigure(new King(Point(4, 0),  FigureColor::white));
+    addFigure(new King(Point(4, 7),  FigureColor::black));
 }
 
 
@@ -162,8 +162,8 @@ void Board::undoMove()
     if ((*this)[lastMove.to]->name != FigureName::pawn && lastMove.figureName == FigureName::pawn)
     {
         Figure* oldFigure = (*this)[lastMove.to];
-        delFirure(lastMove.to);
-        addFirure(new Pawn(lastMove.to, oldFigure->color));
+        delFigure(lastMove.to);
+        addFigure(new Pawn(lastMove.to, oldFigure->color));
     }
 
     (*this)[lastMove.to]->pos = lastMove.from; 
@@ -172,7 +172,7 @@ void Board::undoMove()
 
     if (lastMove.isAttack)
     {        
-        addFirure(cemetery.back());
+        addFigure(cemetery.back());
         cemetery.pop_back();        
     }
 }

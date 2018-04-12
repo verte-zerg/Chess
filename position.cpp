@@ -48,7 +48,8 @@ int Position::getBestAssessment(Board* b, uint nowDepth)
 		{		
 			bestAssessment = tmp;
 			moveDepth = newPos->moveDepth;	
-		}	
+		}
+		delete newPos;
 	}
 
 	//Проверка на пат

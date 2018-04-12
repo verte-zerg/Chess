@@ -67,6 +67,7 @@ Move Player::getBestMove()
 			bestAssessment = tmp;	
 			bestMove = newPos->lastMove;
 		}	
+		delete newPos;
 	}
 	
 	return bestMove;
@@ -76,12 +77,10 @@ Move Player::getBestMove()
 Message* Player::thinking() 
 {
     ownBoard = new Board(*globalBoard);
-    
-
     Message* m = new Message(Role::manager, Player::getBestMove());    
 
-    //По приколу ждем
-    std::this_thread::sleep_for(std::chrono::milliseconds{3000});        
+    //Просто ждем
+    std::this_thread::sleep_for(std::chrono::milliseconds{2000});        
 
     return m;
 }
@@ -104,7 +103,7 @@ void Player::recieveMessage() {
 
         if (msg->reciever == role)
         {
-            std::cout << "Игрок " << ((role == 0) ? "Белый" : "Черный") << " принял. " << std::endl;                        
+            //std::cout << "Игрок " << ((role == 0) ? "Белый" : "Черный") << " принял. " << std::endl;                        
             msg = NULL;
             locker.unlock();
             
@@ -118,6 +117,6 @@ void Player::sendMessage(Message* m)
     std::unique_lock<std::mutex> locker(lockAccess);
     msg = m;   
 
-    std::cout << "Игрок " << ((role == 0) ? "Белый" : "Черный") << " отправил менеджеру ход: " << m->move << std::endl; 
+    std::cout << "Игрок " << ((role == 0) ? "Белый" : "Черный") << ": ход -> " << m->move << std::endl; 
     checkMessage.notify_all();
 }

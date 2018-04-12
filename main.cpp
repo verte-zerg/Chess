@@ -33,22 +33,22 @@ void addFig(std::string name, int x, int y, Board* b, FigureColor color)
     }
 
     if (name == "K")
-        b->addFirure(new Knight(Point(x, y), color));
+        b->addFigure(new Knight(Point(x, y), color));
     else if (name == "B")
-        b->addFirure(new Bishop(Point(x, y), color));
+        b->addFigure(new Bishop(Point(x, y), color));
     else if (name == "R")
-        b->addFirure(new Rook(Point(x, y), color));
+        b->addFigure(new Rook(Point(x, y), color));
     else if (name == "Q")
-        b->addFirure(new Queen(Point(x, y), color));
+        b->addFigure(new Queen(Point(x, y), color));
     else if (name == "Kg")
-        b->addFirure(new King(Point(x, y), color));
+        b->addFigure(new King(Point(x, y), color));
+    else if (name == "P")
+        b->addFigure(new Pawn(Point(x, y), color));
     else
     {
         std::cout << "Неизвестное название фигуры.\n";
         return;
     }
-    //else if (name == "P")
-      //  b->addFirure(new Pawn(Point(x, y), color));
 }
 
 void consoleArrangement(Board* b)
@@ -100,6 +100,7 @@ void consoleArrangement(Board* b)
     }
 }
 
+//Ненужный метод
 void loopGetMoves(Board* b)
 {
     std::string in;
@@ -129,11 +130,9 @@ int main()
 {
     globalBoard = new Board();            
     consoleArrangement(globalBoard);
-    plotInConsole();
-    //loopGetMoves(globalBoard);
+    plotInConsole();    
 
-    //Normal game
-    Player playerWhite(Role::playerWhite, 3), playerBlack(Role::playerBlack, 3);
+    Player playerWhite(Role::playerWhite, 5), playerBlack(Role::playerBlack, 3);
     Manager manager;
 
     std::thread mng(&Manager::recieveMessage, std::ref(manager));

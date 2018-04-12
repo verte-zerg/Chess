@@ -12,8 +12,8 @@ class Figure;
 typedef Figure* figurePtr;
 
 /**
+ * @class Board
  * @brief Класс доска, хранящая указатели на фигуры, и основные методы над ними
- * 
  */
 class Board {
     figurePtr board[8][8]; ///< Массив указателей на фигуры на доске
@@ -49,14 +49,14 @@ public:
      * 
      * @param figure Фигура, которую нужно добавить     
      */
-    void addFirure(Figure* figure);
+    void addFigure(Figure* figure);
 
     /**
      * @brief Удаление фигуры
      * 
      * @param pos Позиция, с которой нужно удалить фигуру     
      */
-    void delFirure(Point pos);
+    void delFigure(Point pos);
 
     /**
      * @brief Расстановка фигур в начальные состояние

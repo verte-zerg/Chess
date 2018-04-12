@@ -14,7 +14,7 @@ void King::findChess(short dx, short dy, std::vector<Move>& moves, Board* b) con
 	if ((*b)[to] != NULL)
 	{
 		if ((*b)[to]->color != color)
-			moves.push_back(Move(pos, to, true, name));		
+			moves.push_back(Move(pos, to, true, name));	
 		return;
 	}
 
@@ -38,7 +38,7 @@ std::vector<Move> King::getMoves(Board *b) const
 }
 
 Figure* King::copy() const
-{
+{	
 	return new King(pos, color);
 }
 

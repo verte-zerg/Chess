@@ -6,23 +6,11 @@
 
 #include "manager.h"
 
-/**
- * Manager implementation
- */
-
 extern Board* globalBoard;
 
 extern Message* msg;
 extern std::condition_variable checkMessage;
 extern std::mutex lockAccess;
-
-void Manager::update() {
-
-}
-
-void Manager::plot() {
-
-}
 
 void plotInConsole()
 {
@@ -68,7 +56,8 @@ void plotInConsole()
 void Manager::sendMessage(Message* m) 
 {
     std::unique_lock<std::mutex> locker(lockAccess);
-    std::cout << "Менеджер отправил игроку " << ((state == 0) ? "Белый" : "Черный") << ".\n\n"; 
+    //std::cout << "Менеджер отправил игроку " << ((state == 0) ? "Белый" : "Черный") << ".\n\n"; 
+    std::cout << "Ход " << ((state == 0) ? "белых" : "Черных") << "\n\n"; 
     msg = m;
 }
 
@@ -89,7 +78,7 @@ void Manager::processingOfMessage()
 void Manager::recieveMessage() 
 {
     //Ожидание привязки всех на условную переменную
-    std::this_thread::sleep_for(std::chrono::seconds{3});
+    std::this_thread::sleep_for(std::chrono::milliseconds{1500});
 
     Message* m = new Message(Role::playerWhite, Move());   
 
@@ -110,14 +99,14 @@ void Manager::recieveMessage()
 
         if (msg->reciever != Role::manager)
         {
-            std::cout << "Менеджер не принял." << std::endl;            
+            //std::cout << "Менеджер не принял." << std::endl;            
             locker.unlock();
             continue;
         }        
 
         if (msg->reciever == Role::manager)
         {
-            std::cout << "Менеджер принял." << std::endl;                                   
+            //std::cout << "Менеджер принял." << std::endl;                                   
             locker.unlock();   
             processingOfMessage();       
         }

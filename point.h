@@ -2,8 +2,8 @@
 #define POINT_H
 
 /**
+ * @class Point
  * @brief Структура, хранящая положение фигуры на доске
- * 
  */
 struct Point
 {

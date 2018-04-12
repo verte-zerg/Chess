@@ -1,10 +1,15 @@
 #ifndef PLAYER_H
 #define PLAYER_H
+
 #include "role.h"
 #include "board.h"
 #include "position.h"
 #include "message.h"
 
+/**
+ * @class Player
+ * @brief Класс игрока, который осуществляет выбор лучшего хода
+ */
 class Player
 {
 	const uint calcDepth; ///< Глубина просчета в полуходах

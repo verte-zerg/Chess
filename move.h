@@ -7,7 +7,8 @@
 #include <cstring>
 
 /**
- * @brief Класс Move
+ * @class Move
+ * @brief Структура, содержащая информацию о ходе
  */
 struct Move {
 public: 

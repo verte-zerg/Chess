@@ -6,18 +6,31 @@
 
 void plotInConsole();
 
-class Manager {
+/**
+ * @class Manager
+ * @brief Класс менеджера, который отвечает за передачу хода между игроками и контролем хода игры
+ */
+class Manager 
+{
 private: 
     Role state;
-
-    void plot();
     
+    /**
+     * @brief Функция отправки сообщения
+     * 
+     * @param m Сообщение, которое нужно отправить
+     */
     void sendMessage(Message* m);
 
+    /**
+     * @brief Функция обработки полученного сообщения
+     */
     void processingOfMessage();
-
-    void update();
 public:
+
+    /**
+     * @brief Функция ожидания приёма сообщения
+     */
     void recieveMessage();
 };
 
