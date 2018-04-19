@@ -132,7 +132,7 @@ int main()
     consoleArrangement(globalBoard);
     plotInConsole();    
 
-    Player playerWhite(Role::playerWhite, 5), playerBlack(Role::playerBlack, 3);
+    Player playerWhite(Role::playerWhite, 4), playerBlack(Role::playerBlack, 3);
     Manager manager;
 
     std::thread mng(&Manager::recieveMessage, std::ref(manager));

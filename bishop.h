@@ -42,8 +42,10 @@ public:
 	void findChess(short dx, short dy, std::vector<Move>& moves, Board* b) const;
 
 	std::vector<Move> getMoves(Board *b) const;
+
 	Figure* copy() const;
 	double getCost() const;
+	bool isLegal(Role role) const;
 };
 
 #endif

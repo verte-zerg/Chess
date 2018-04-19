@@ -57,6 +57,8 @@ Board::Board(Board& b)
                 if (f->color == FigureColor::black)
                     blackFigures.push_back(f);                    
             }
+            else
+                board[i][j] = NULL;
     
     std::list<Figure*> copyCemetery(b.cemetery);
 
@@ -175,4 +177,92 @@ void Board::undoMove()
         addFigure(cemetery.back());
         cemetery.pop_back();        
     }
+}
+
+bool Board::isLegal(Role role) const
+{
+    int numberOfPawns = 8;
+    int tmp;
+
+    #pragma region Проверка количества королей
+    if (getNumberOfFigures(FigureName::king, FigureColor::black) != 1)
+        return false;
+
+    if (getNumberOfFigures(FigureName::king, FigureColor::white) != 1)
+        return false;
+    #pragma endregion
+    
+    #pragma region Проверка количества белых фигур
+    tmp = getNumberOfFigures(FigureName::knight, FigureColor::white);
+    if (tmp > 10)
+        return false;
+    if (tmp > 2)
+        numberOfPawns -= (tmp - 2);
+
+    tmp = getNumberOfFigures(FigureName::bishop, FigureColor::white);
+    if (tmp > 10)
+        return false;
+    if (tmp > 2)
+        numberOfPawns -= (tmp - 2);
+
+    tmp = getNumberOfFigures(FigureName::rook, FigureColor::white);
+    if (tmp > 10)
+        return false;    
+    if (tmp > 2)
+        numberOfPawns -= (tmp - 2);
+
+    tmp = getNumberOfFigures(FigureName::queen, FigureColor::white);
+    if (tmp > 9)
+        return false;    
+    if (tmp > 1)
+        numberOfPawns -= (tmp - 1);
+
+    tmp = getNumberOfFigures(FigureName::pawn, FigureColor::white);
+    if (tmp > 8 || numberOfPawns < 0)
+        return false;    
+    #pragma endregion    
+
+    numberOfPawns = 0;
+    #pragma region Проверка количества черных фигур
+    tmp = getNumberOfFigures(FigureName::knight, FigureColor::black);
+    if (tmp > 10)
+        return false;
+    if (tmp > 2)
+        numberOfPawns -= (tmp - 2);
+
+    tmp = getNumberOfFigures(FigureName::bishop, FigureColor::black);
+    if (tmp > 10)
+        return false;
+    if (tmp > 2)
+        numberOfPawns -= (tmp - 2);
+
+    tmp = getNumberOfFigures(FigureName::rook, FigureColor::black);
+    if (tmp > 10)
+        return false;    
+    if (tmp > 2)
+        numberOfPawns -= (tmp - 2);
+
+    tmp = getNumberOfFigures(FigureName::queen, FigureColor::black);
+    if (tmp > 9)
+        return false;    
+    if (tmp > 1)
+        numberOfPawns -= (tmp - 1);
+
+    tmp = getNumberOfFigures(FigureName::pawn, FigureColor::black);
+    if (tmp > 8 || numberOfPawns < 0)
+        return false;    
+    #pragma endregion       
+}
+
+ushort Board::getNumberOfFigures(const FigureName name, const FigureColor color) const
+{
+    ushort count = 0;
+
+    for (uint i = 0; i < 8; i++)
+        for (uint j = 0; j < 8; j++)
+            if (board[i][j] != NULL)
+                if (board[i][j]->name == name && board[i][j]->color == color)
+                    count++;
+
+    return count;
 }

@@ -78,3 +78,8 @@ double Pawn::getCost() const
 	else
 		return cost + costPos[pos.y][7 - pos.x];
 }
+
+bool Pawn::isLegal(Role role) const
+{
+	return true;
+}

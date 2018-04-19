@@ -89,6 +89,24 @@ public:
      * 
      */
     void undoMove();
+
+    /**
+     * @brief Определяет легальность данной позиции на доске 
+     * 
+     * @param role Игрок, для которого производится оценка 
+     * @return true Позиция легальна
+     * @return false Позиция нелегальна
+     */
+    bool isLegal(Role role) const;
+
+    /**
+     * @brief Получение количества фигур данного типа и цвета на доске
+     * 
+     * @param name Тип фигуры
+     * @param color Цвет фигуры
+     * @return unsigned short Количество фигур
+     */
+    ushort getNumberOfFigures(const FigureName name, const FigureColor color) const;
 };
 
 #endif

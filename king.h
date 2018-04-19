@@ -44,6 +44,7 @@ public:
 	std::vector<Move> getMoves(Board *b) const;
 	Figure* copy() const;
 	double getCost() const;
+	bool isLegal(Role role) const;
 };
 
 #endif

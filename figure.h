@@ -6,6 +6,7 @@
 #include "move.h"
 #include "figureColor.h"
 #include "board.h"
+#include "role.h"
 
 class Board;
 
@@ -28,6 +29,15 @@ public:
     virtual std::vector<Move> getMoves(Board* b) const = 0;  
 
     /**
+     * @brief Определяет легальность данной позиции на доске 
+     * 
+     * @param role Игрок, для которого производится оценка 
+     * @return true Позиция легальна
+     * @return false Позиция нелегальна
+     */
+    virtual bool isLegal(Role role) const = 0;
+
+    /**
      * @brief Конструктор по умолчанию
      * 
      * @param _pos Позиция фигуры
@@ -48,6 +58,14 @@ public:
      * @return double Ценность фигуры
      */
     virtual double getCost() const = 0;
+
+    /**
+     * @brief Возвращает количество контролируемых полей
+     * 
+     * @param b Доска, на которой производится проверка
+     * @return int Количество контролируемых полей
+     */    
+    //get
 };
 
 #endif

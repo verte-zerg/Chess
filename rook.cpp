@@ -50,3 +50,8 @@ double Rook::getCost() const
 	else
 		return cost + costPos[pos.y][7 - pos.x];
 }
+
+bool Rook::isLegal(Role role) const
+{
+	return true;
+}

@@ -50,3 +50,8 @@ double Bishop::getCost() const
 	else
 		return cost + costPos[pos.y][7 - pos.x];	
 }
+
+bool Bishop::isLegal(Role role) const
+{
+	return true;
+}
