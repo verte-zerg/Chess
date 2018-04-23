@@ -179,7 +179,7 @@ void Board::undoMove()
     }
 }
 
-bool Board::isLegal(Role role) const
+bool Board::isLegal(Role role)
 {
     int numberOfPawns = 8;
     int tmp;
@@ -252,6 +252,42 @@ bool Board::isLegal(Role role) const
     if (tmp > 8 || numberOfPawns < 0)
         return false;    
     #pragma endregion       
+
+    #pragma region Проверка на двойной шах
+    bool whiteKingAttack = false;
+    bool blackKingAttack = false;
+
+    std::vector<Move> possibleMoves, tmpMove;
+    for (ushort i = 0; i < 8; i++)
+        for (ushort j = 0; j < 8; j++)
+            if (board[i][j] != NULL && board[i][j]->name != FigureName::king)
+            {   
+                tmpMove = board[i][j]->getMoves(this);
+                possibleMoves.insert(possibleMoves.end(), tmpMove.begin(), tmpMove.end());
+            }
+    
+    for(Move move : possibleMoves)
+        if (move.isAttack && (*this)[move.to]->name == FigureName::king)
+        {
+            if ((*this)[move.to]->color == FigureColor::white)
+                whiteKingAttack = true;
+            else
+                blackKingAttack = true;
+        }
+            
+    if (whiteKingAttack && blackKingAttack)
+        return false; 
+    #pragma endregion
+
+    #pragma region Проверка каждой фигуры на легальность
+    for (ushort i = 0; i < 8; i++)
+        for (ushort j = 0; j < 8; j++)
+            if (board[i][j] != NULL)
+                if (!board[i][j]->isLegal(Role::playerWhite))
+                    return false;
+    #pragma endregion
+
+    return true;
 }
 
 ushort Board::getNumberOfFigures(const FigureName name, const FigureColor color) const

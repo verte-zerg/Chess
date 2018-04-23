@@ -97,7 +97,7 @@ public:
      * @return true Позиция легальна
      * @return false Позиция нелегальна
      */
-    bool isLegal(Role role) const;
+    bool isLegal(Role role);
 
     /**
      * @brief Получение количества фигур данного типа и цвета на доске
