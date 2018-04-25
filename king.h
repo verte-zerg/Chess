@@ -17,6 +17,8 @@ class King : public Figure {
 public:
 	const double cost = 9000.;
 
+	int countStep;
+
 	const double costPos[8][8] 
 	{
 		{-30,-40,-40,-50,-50,-40,-40,-30},
@@ -38,13 +40,15 @@ public:
 	 * @param dy Смещение по y
 	 * @param moves Список ходов, куда нужно записать новые ходы
 	 * @param b Доска, на которой происходит поиск ходов
+	 * @param ownAttack Возможность атаки своих
 	 */
-	void findChess(short dx, short dy, std::vector<Move>& moves, Board* b) const;
+	void findChess(short dx, short dy, std::vector<Move>& moves, Board* b, bool ownAttack) const;
 
 	std::vector<Move> getMoves(Board *b) const;
 	Figure* copy() const;
 	double getCost() const;
-	bool isLegal(Role role) const;
+	bool isLegal(Role role, Board* b) const;
+	std::vector<Move> getControlCell(Board* b) const;
 };
 
 #endif

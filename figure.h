@@ -35,7 +35,7 @@ public:
      * @return true Позиция легальна
      * @return false Позиция нелегальна
      */
-    virtual bool isLegal(Role role) const = 0;
+    virtual bool isLegal(Role role, Board* b) const = 0;
 
     /**
      * @brief Конструктор по умолчанию
@@ -60,12 +60,12 @@ public:
     virtual double getCost() const = 0;
 
     /**
-     * @brief Возвращает количество контролируемых полей
+     * @brief Возвращает список контролируемых полей
      * 
      * @param b Доска, на которой производится проверка
-     * @return int Количество контролируемых полей
-     */    
-    //get
+     * @return std::vector<Move> Список контролируемых полей
+     */
+    virtual std::vector<Move> getControlCell(Board* b) const = 0;  
 };
 
 #endif

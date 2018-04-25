@@ -107,6 +107,16 @@ public:
      * @return unsigned short Количество фигур
      */
     ushort getNumberOfFigures(const FigureName name, const FigureColor color) const;
+
+    /**
+     * @brief Проверка ячейки на атакуемость
+     * 
+     * @param cell Ячейка, которую нужно проверить 
+     * @param role Роль, для которой выполняется проверка
+     * @return true 
+     * @return false 
+     */
+    bool cellIsAttacked(Point cell, Role role);
 };
 
 #endif

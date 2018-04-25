@@ -9,6 +9,7 @@ void Board::moveFigure(Move move) {
     
     if (move.to == move.from)
         return;
+
     //Добавить обработку взятия на проходе и рокировку
     if ((*this)[move.to] != NULL)
     {
@@ -34,7 +35,17 @@ void Board::moveFigure(Move move) {
         }
         
         move.figureName = FigureName::pawn;
+        movesHistory.pop_back();
+        movesHistory.push_back(move);
     }
+
+    //Счетчик количества ходов для проверки возможности рокировки
+    if (move.figureName == FigureName::rook)
+        ((Rook*)(*this)[move.from])->countStep++;
+
+    if (move.figureName == FigureName::king)
+        ((King*)(*this)[move.from])->countStep++;
+
 
     (*this)[move.from]->pos = move.to;
     (*this)[move.to] = (*this)[move.from];
@@ -161,6 +172,13 @@ void Board::undoMove()
     if (lastMove.to == lastMove.from)
         return;
 
+    //Счетчик количества ходов для проверки возможности рокировки
+    if (lastMove.figureName == FigureName::rook)
+        ((Rook*)(*this)[lastMove.to])->countStep--;
+
+    if (lastMove.figureName == FigureName::king)
+        ((King*)(*this)[lastMove.to])->countStep--;
+
     if ((*this)[lastMove.to]->name != FigureName::pawn && lastMove.figureName == FigureName::pawn)
     {
         Figure* oldFigure = (*this)[lastMove.to];
@@ -283,7 +301,7 @@ bool Board::isLegal(Role role)
     for (ushort i = 0; i < 8; i++)
         for (ushort j = 0; j < 8; j++)
             if (board[i][j] != NULL)
-                if (!board[i][j]->isLegal(Role::playerWhite))
+                if (!board[i][j]->isLegal(Role::playerWhite, this))
                     return false;
     #pragma endregion
 
@@ -301,4 +319,21 @@ ushort Board::getNumberOfFigures(const FigureName name, const FigureColor color)
                     count++;
 
     return count;
+}
+
+bool Board::cellIsAttacked(Point cell, Role role)
+{
+    std::vector<Figure*> enemy = getEnemyFigures(role);
+
+    std::vector<Move> tmpMoves;
+
+    for(Figure* fig : enemy)
+    {
+        tmpMoves = fig->getControlCell(this);
+        for(Move move : tmpMoves)
+            if (move.to == cell)
+                return true;
+    }
+
+    return false;
 }

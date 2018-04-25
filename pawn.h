@@ -34,17 +34,19 @@ public:
 	/**
 	 * @brief Поиск возможных ходов в заданном направлении
 	 *
-	 * @param dx Смещение по x	 
-	 * @param canAttack Проверка атакующего хода
+	 * @param dx Смещение по x
+	 * @param canAttack Проверка на атаку
 	 * @param moves Список ходов, куда нужно записать новые ходы
 	 * @param b Доска, на которой происходит поиск ходов
+	 * @param ownAttack Возможность атаки своих
 	 */
-	void findChess(short dx, bool canAttack, std::vector<Move>& moves, Board* b) const;
+	void findChess(short dx, bool canAttack, std::vector<Move>& moves, Board* b, bool ownAttack) const;
 
 	std::vector<Move> getMoves(Board *b) const;
 	Figure* copy() const;
 	double getCost() const;
-	bool isLegal(Role role) const;
+	bool isLegal(Role role, Board* b) const;
+	std::vector<Move> getControlCell(Board* b) const;
 };
 
 #endif

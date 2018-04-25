@@ -1,8 +1,8 @@
 #include "king.h"
 
-King::King(Point _pos, FigureColor _figureColor) : Figure(_pos, _figureColor, FigureName::king) {};
+King::King(Point _pos, FigureColor _figureColor) : Figure(_pos, _figureColor, FigureName::king), countStep(0) {};
 
-void King::findChess(short dx, short dy, std::vector<Move>& moves, Board* b) const
+void King::findChess(short dx, short dy, std::vector<Move>& moves, Board* b, bool ownAttack) const
 {
 	Point to = pos;
 	to.x += dx;
@@ -13,7 +13,7 @@ void King::findChess(short dx, short dy, std::vector<Move>& moves, Board* b) con
 
 	if ((*b)[to] != NULL)
 	{
-		if ((*b)[to]->color != color)
+		if ((*b)[to]->color != color || ownAttack)
 			moves.push_back(Move(pos, to, true, name));	
 		return;
 	}
@@ -25,21 +25,39 @@ std::vector<Move> King::getMoves(Board *b) const
 {
 	std::vector<Move> moves;
 
-	findChess(0, 1, moves, b);
-	findChess(0, -1, moves, b);
-	findChess(1, 0, moves, b);
-	findChess(-1, 0, moves, b);
-	findChess(1, 1, moves, b);
-	findChess(-1, -1, moves, b);
-	findChess(1, -1, moves, b);	
-	findChess(-1, 1, moves, b);
+	findChess(0, 1, moves, b, false);
+	findChess(0, -1, moves, b, false);
+	findChess(1, 0, moves, b, false);
+	findChess(-1, 0, moves, b, false);
+	findChess(1, 1, moves, b, false);
+	findChess(-1, -1, moves, b, false);
+	findChess(1, -1, moves, b, false);	
+	findChess(-1, 1, moves, b, false);
+
+	return moves;
+}
+
+std::vector<Move> King::getControlCell(Board *b) const
+{
+	std::vector<Move> moves;
+
+	findChess(0, 1, moves, b, true);
+	findChess(0, -1, moves, b, true);
+	findChess(1, 0, moves, b, true);
+	findChess(-1, 0, moves, b, true);
+	findChess(1, 1, moves, b, true);
+	findChess(-1, -1, moves, b, true);
+	findChess(1, -1, moves, b, true);	
+	findChess(-1, 1, moves, b, true);
 
 	return moves;
 }
 
 Figure* King::copy() const
 {	
-	return new King(pos, color);
+	King* newKing = new King(pos, color);
+	newKing->countStep = countStep;	
+	return newKing;
 }
 
 double King::getCost() const
@@ -50,7 +68,7 @@ double King::getCost() const
 		return cost + costPos[pos.y][7 - pos.x];
 }
 
-bool King::isLegal(Role role) const
+bool King::isLegal(Role role, Board* b) const
 {
 	return true;
 }

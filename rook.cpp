@@ -1,8 +1,8 @@
 #include "rook.h"
 
-Rook::Rook(Point _pos, FigureColor _figureColor) : Figure(_pos, _figureColor, FigureName::rook) {};
+Rook::Rook(Point _pos, FigureColor _figureColor) : Figure(_pos, _figureColor, FigureName::rook), countStep(0) {};
 
-void Rook::findChess(short dx, short dy, std::vector<Move>& moves, Board* b) const
+void Rook::findChess(short dx, short dy, std::vector<Move>& moves, Board* b, bool ownAttack) const
 {
 	Point from = pos;
 	while (true)
@@ -16,7 +16,7 @@ void Rook::findChess(short dx, short dy, std::vector<Move>& moves, Board* b) con
 
 		if ((*b)[to] != NULL)
 		{
-			if ((*b)[to]->color != color)
+			if ((*b)[to]->color != color || ownAttack)
 				moves.push_back(Move(pos, to, true, name));
 			return;
 		}
@@ -30,17 +30,31 @@ std::vector<Move> Rook::getMoves(Board *b) const
 {
 	std::vector<Move> moves;
 
-	findChess(0, 1, moves, b);
-    findChess(0, -1, moves, b);
-	findChess(1, 0, moves, b);
-	findChess(-1, 0, moves, b);
+	findChess(0, 1, moves, b, false);
+    findChess(0, -1, moves, b, false);
+	findChess(1, 0, moves, b, false);
+	findChess(-1, 0, moves, b, false);
+	
+	return moves;
+}
+
+std::vector<Move> Rook::getControlCell(Board *b) const
+{
+	std::vector<Move> moves;
+
+	findChess(0, 1, moves, b, true);
+    findChess(0, -1, moves, b, true);
+	findChess(1, 0, moves, b, true);
+	findChess(-1, 0, moves, b, true);
 	
 	return moves;
 }
 
 Figure* Rook::copy() const
 {
-	return new Rook(pos, color);
+	Rook* newRook = new Rook(pos, color);
+	newRook->countStep = countStep;
+	return newRook;
 }
 
 double Rook::getCost() const
@@ -51,7 +65,7 @@ double Rook::getCost() const
 		return cost + costPos[pos.y][7 - pos.x];
 }
 
-bool Rook::isLegal(Role role) const
+bool Rook::isLegal(Role role, Board* b) const
 {
 	return true;
 }

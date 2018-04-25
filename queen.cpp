@@ -2,7 +2,7 @@
 
 Queen::Queen(Point _pos, FigureColor _figureColor): Figure(_pos, _figureColor, FigureName::queen) {};
 
-void Queen::findChess(short dx, short dy, std::vector<Move>& moves, Board* b) const
+void Queen::findChess(short dx, short dy, std::vector<Move>& moves, Board* b, bool ownAttack) const
 {
 	Point from = pos;
 	while (true)
@@ -16,7 +16,7 @@ void Queen::findChess(short dx, short dy, std::vector<Move>& moves, Board* b) co
 
         if ((*b)[to] != NULL)
         {
-            if ((*b)[to]->color != color)
+            if ((*b)[to]->color != color || ownAttack)
                 moves.push_back(Move(pos, to, true, name));                            
             return;                
         }
@@ -30,14 +30,30 @@ std::vector<Move> Queen::getMoves(Board *b) const
 {
     std::vector<Move> moves;
 
-    findChess(0, 1, moves, b);
-    findChess(0, -1, moves, b);
-    findChess(1, 0, moves, b);
-    findChess(-1, 0, moves, b);
-    findChess(1, 1, moves, b);
-    findChess(-1, -1, moves, b);
-    findChess(1, -1, moves, b);    
-    findChess(-1, 1, moves, b);
+    findChess(0, 1, moves, b, false);
+    findChess(0, -1, moves, b, false);
+    findChess(1, 0, moves, b, false);
+    findChess(-1, 0, moves, b, false);
+    findChess(1, 1, moves, b, false);
+    findChess(-1, -1, moves, b, false);
+    findChess(1, -1, moves, b, false);    
+    findChess(-1, 1, moves, b, false);
+
+    return moves;
+}
+
+std::vector<Move> Queen::getControlCell(Board *b) const
+{
+    std::vector<Move> moves;
+
+    findChess(0, 1, moves, b, true);
+    findChess(0, -1, moves, b, true);
+    findChess(1, 0, moves, b, true);
+    findChess(-1, 0, moves, b, true);
+    findChess(1, 1, moves, b, true);
+    findChess(-1, -1, moves, b, true);
+    findChess(1, -1, moves, b, true);    
+    findChess(-1, 1, moves, b, true);
 
     return moves;
 }
@@ -55,7 +71,7 @@ double Queen::getCost() const
 		return cost + costPos[pos.y][7 - pos.x];
 }
 
-bool Queen::isLegal(Role role) const
+bool Queen::isLegal(Role role, Board* b) const
 {
 	return true;
 }
