@@ -11,12 +11,14 @@
 #include "figureColor.h"
 #include "allFigures.h"
 #include "role.h"
+#include "stateGame.h"
 
 Board* globalBoard;
 
 Message* msg = NULL;
 std::condition_variable checkMessage;
 std::mutex lockAccess;
+StateGame stateGame = StateGame::game;
 
 void addFig(std::string name, int x, int y, Board* b, FigureColor color)
 {

@@ -8,6 +8,7 @@
 #include "figureName.h"
 #include "figure.h"
 #include "board.h"
+#include "rook.h"
 
 /**
 * @class King
@@ -49,6 +50,15 @@ public:
 	double getCost() const;
 	bool isLegal(Role role, Board* b) const;
 	std::vector<Move> getControlCell(Board* b) const;
+
+	/**
+	 * @brief 
+	 * 
+	 * @param moves 
+	 * @param b 
+	 * @param posOfRook 
+	 */
+	void isLegalCastling(std::vector<Move>& moves, Board* b, Point posOfRook) const;
 };
 
 #endif

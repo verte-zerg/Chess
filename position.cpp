@@ -1,4 +1,5 @@
 #include "position.h"
+#include "typeMove.h"
  
 Position::Position(uint _maxDepth, Role _role): maxDepth(_maxDepth), whoseRole(_role), moveDepth(0) {};
 
@@ -27,7 +28,8 @@ int Position::getBestAssessment(Board* b, uint nowDepth)
 	canvass(b, (Role)(!whoseRole));
 
 	for (uint i = 0; i < possibleMoves.size(); i++)
-		if (possibleMoves[i].isAttack && (*b)[possibleMoves[i].to]->name == FigureName::king)
+		if ((possibleMoves[i].type == TypeMove::attack || possibleMoves[i].type == TypeMove::attack_and_transform) 
+			&& (*b)[possibleMoves[i].to]->name == FigureName::king)
 		{
 			bestAssessment = -k*(checkmate - (int)nowDepth + (int)maxDepth);
 			moveDepth = nowDepth;
@@ -59,7 +61,7 @@ int Position::getBestAssessment(Board* b, uint nowDepth)
 		Position* newPos = new Position(maxDepth, (Role)(!whoseRole));
 
 		//Создаем пустой ход
-		newPos->lastMove = Move(fig->pos, fig->pos, false, fig->name);
+		newPos->lastMove = Move(fig->pos, fig->pos, TypeMove::empty, fig->name);
 		tmp = newPos->getBestAssessment(b, nowDepth + 1);
 
 		//Ставим пат, только если на этом же этапе проверяли мат

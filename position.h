@@ -13,10 +13,10 @@
  */
 class Position
 {
+public:	
     const int stalemate = 90000; ///< Константа для значения пата
     const int checkmate = 100000; ///< Константа для значения мата
 
-public:	
 	std::vector<Move> possibleMoves; ///< Все возможные ходы из данной ситуации
 
 	Role whoseRole; ///< Цвет игрока, ход которого рассчитывается в этой ситуации

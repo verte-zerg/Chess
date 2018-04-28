@@ -17,11 +17,11 @@ void Bishop::findChess(short dx, short dy, std::vector<Move>& moves, Board* b, b
 		if ((*b)[to] != NULL)
 		{
 			if ((*b)[to]->color != color || ownAttack)
-				moves.push_back(Move(pos, to, true, name));
+				moves.push_back(Move(pos, to, TypeMove::attack, name));
 			return;
 		}
 
-		moves.push_back(Move(pos, to, false, name));
+		moves.push_back(Move(pos, to, TypeMove::move, name));
 		from = to;
 	}
 }

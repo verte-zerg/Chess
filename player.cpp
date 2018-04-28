@@ -6,12 +6,14 @@
 
 #include "player.h"
 #include "message.h"
+#include "stateGame.h"
 
 extern Board* globalBoard;
 
 extern std::condition_variable checkMessage;
 extern std::mutex lockAccess;
 extern Message *msg;
+extern StateGame stateGame;
 
 Player::Player(Role _role, uint _calcDepth = 1): role(_role), calcDepth(_calcDepth) {};
 
@@ -65,9 +67,21 @@ Move Player::getBestMove()
 		if (tmp > bestAssessment)	
 		{	
 			bestAssessment = tmp;	
+
 			bestMove = newPos->lastMove;
 		}	
 		delete newPos;
+	}
+
+	if (bestAssessment >= initPos.checkmate + (int)calcDepth - 2 - (((int)calcDepth + 1) % 2))
+	{
+		std::cout << "Мат поставил игрок " << ((role == Role::playerWhite) ? "Белый" : "Черный") << std::endl;
+		stateGame = StateGame::checkmate;
+	}
+	else if (bestAssessment >= initPos.stalemate + (int)calcDepth - 2 - (((int)calcDepth + 1) % 2) && bestAssessment < initPos.checkmate)
+	{
+		std::cout << "Пат поставил игрок " << ((role == Role::playerWhite) ? "Белый" : "Черный") << std::endl;
+		stateGame = StateGame::stalemate;
 	}
 	
 	return bestMove;
@@ -94,9 +108,12 @@ void Player::recieveMessage() {
             checkMessage.wait(locker); 
         while (msg == NULL);
 
+		if (stateGame != StateGame::game)
+			return;          
+
         if (msg->reciever != role)
         {
-            //std::cout << "Игрок " << ((role == 0) ? "Белый" : "Черный") << " не принял. " << std::endl;            
+            //std::cout << "Игрок " << ((role == 0) ? "Белый" : "Черный") << " не принял. " << std::endl;  
             locker.unlock();
             continue;
         }
@@ -105,9 +122,11 @@ void Player::recieveMessage() {
         {
             //std::cout << "Игрок " << ((role == 0) ? "Белый" : "Черный") << " принял. " << std::endl;                        
             msg = NULL;
-            locker.unlock();
+            locker.unlock();            
+            sendMessage(thinking()); 
             
-            sendMessage(thinking());                   
+			if (stateGame != StateGame::game)
+				return;                 
         }
     }
 }

@@ -23,34 +23,40 @@ void Pawn::findChess(short dx, bool canAttack, std::vector<Move>& moves, Board* 
 		if (to.y == 8 || to.x == 8 || to.y == -1 || to.x == -1)
 			return;
 
-		if ((*b)[to] != NULL)
+		if (canAttack && ownAttack)
 		{
-			if (((*b)[to]->color != color || ownAttack) && canAttack)
+			moves.push_back(Move(pos, to, TypeMove::attack, name));
+			return;
+		}
+
+		if ((*b)[to] != NULL)
+		{			
+			if ((*b)[to]->color != color && canAttack)
 			{				
 				if (to.y == 7 - initPosY + dy)
 				{
-					moves.push_back(Move(pos, to, true, FigureName::bishop));
-					moves.push_back(Move(pos, to, true, FigureName::knight));
-					moves.push_back(Move(pos, to, true, FigureName::rook));
-					moves.push_back(Move(pos, to, true, FigureName::queen));
+					moves.push_back(Move(pos, to, TypeMove::attack_and_transform, FigureName::bishop));
+					moves.push_back(Move(pos, to, TypeMove::attack_and_transform, FigureName::knight));
+					moves.push_back(Move(pos, to, TypeMove::attack_and_transform, FigureName::rook));
+					moves.push_back(Move(pos, to, TypeMove::attack_and_transform, FigureName::queen));
 				}
 				else
-					moves.push_back(Move(pos, to, true, name));
+					moves.push_back(Move(pos, to, TypeMove::attack, name));
 			}
 			return;
-		}
+		}		
 
 		if (!canAttack)
 		{
 			if (to.y == 7 - initPosY + dy)
 			{
-				moves.push_back(Move(pos, to, false, FigureName::bishop));
-				moves.push_back(Move(pos, to, false, FigureName::knight));
-				moves.push_back(Move(pos, to, false, FigureName::rook));
-				moves.push_back(Move(pos, to, false, FigureName::queen));
+				moves.push_back(Move(pos, to, TypeMove::transform, FigureName::bishop));
+				moves.push_back(Move(pos, to, TypeMove::transform, FigureName::knight));
+				moves.push_back(Move(pos, to, TypeMove::transform, FigureName::rook));
+				moves.push_back(Move(pos, to, TypeMove::transform, FigureName::queen));
 			}
 			else
-				moves.push_back(Move(pos, to, false, name));
+				moves.push_back(Move(pos, to, TypeMove::move, name));
 		}
 		from = to;
 	}
@@ -62,6 +68,17 @@ std::vector<Move> Pawn::getMoves(Board *b) const
 	findChess(0, false, moves, b, false);
 	findChess(1, true, moves, b, false);
 	findChess(-1, true, moves, b, false);
+	
+	if (!b->movesHistory.empty() && b->movesHistory.back().figureName == pawn)
+	{
+		Move tmpM = b->movesHistory.back();
+		if (abs(tmpM.to.y - tmpM.from.y) == 2 && pos.y == tmpM.to.y && abs(tmpM.to.x - pos.x) == 1)
+		{
+			short dy = ((tmpM.from.y - tmpM.to.y) > 0) ? 1 : -1;
+			tmpM = Move(pos, Point(tmpM.to.x, tmpM.to.y + dy), en_passant, pawn);
+			moves.push_back(tmpM);
+		}
+	}
 
 	return moves;
 }

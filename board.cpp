@@ -2,50 +2,98 @@
 #include <cstddef>
 #include "figureColor.h"
 #include "allFigures.h"
+#include "typeMove.h"
 #include <typeinfo>
 
-void Board::moveFigure(Move move) {
+void Board::moveFigure(Move move)
+{
     movesHistory.push_back(move);
     
-    if (move.to == move.from)
+    //Обработка хода empty
+    if (move.type == TypeMove::empty)    
         return;
 
-    //Добавить обработку взятия на проходе и рокировку
-    if ((*this)[move.to] != NULL)
+    //Уничтожение фигуры
+    if (move.type == TypeMove::attack || move.type == TypeMove::attack_and_transform)
     {
         cemetery.push_back((*this)[move.to]);
         delFigure(move.to);
     }
 
-    //Трансформация фигуры;
-    if ((*this)[move.from]->name == FigureName::pawn && move.figureName != FigureName::pawn)
+    //Трансформация фигуры
+    if (move.type == TypeMove::transform)
     {      
         Figure* oldFigure = (*this)[move.from];
         delFigure(move.from);
         switch (move.figureName)
         {
-            case FigureName::queen : addFigure(new Queen(move.from, oldFigure->color));
+            case FigureName::queen : addFigure(new Queen(move.to, oldFigure->color));
                 break;
-            case FigureName::rook : addFigure(new Rook(move.from, oldFigure->color));
+            case FigureName::rook : addFigure(new Rook(move.to, oldFigure->color));
                 break;
-            case FigureName::bishop : addFigure(new Bishop(move.from, oldFigure->color));
+            case FigureName::bishop : addFigure(new Bishop(move.to, oldFigure->color));
                 break;
-            case FigureName::knight : addFigure(new Knight(move.from, oldFigure->color));
+            case FigureName::knight : addFigure(new Knight(move.to, oldFigure->color));
                 break;
         }
         
         move.figureName = FigureName::pawn;
         movesHistory.pop_back();
         movesHistory.push_back(move);
+        return;
     }
 
     //Счетчик количества ходов для проверки возможности рокировки
-    if (move.figureName == FigureName::rook)
-        ((Rook*)(*this)[move.from])->countStep++;
+    if (move.type != TypeMove::castling)
+    {
+        if (move.figureName == FigureName::rook)
+            ((Rook*)(*this)[move.from])->countStep++;
 
-    if (move.figureName == FigureName::king)
-        ((King*)(*this)[move.from])->countStep++;
+        if (move.figureName == FigureName::king)
+            ((King*)(*this)[move.from])->countStep++;
+    }
 
+    //Рокировка
+    if (move.type == TypeMove::castling)
+    {
+        int dxKing, dxRook;
+
+        Point fromRook = move.to;
+        Point toRook = fromRook;
+
+        Point fromKing = move.from;
+        Point toKing = fromKing;
+
+        if (move.to.x > move.from.x)
+        {
+            dxKing = 2;
+            dxRook = -2;
+        }
+        else
+        {
+            dxKing = -2;
+            dxRook = 3;
+        }     
+
+        toRook.x += dxRook;  
+        toKing.x += dxKing; 
+
+        (*this)[fromKing]->pos = toKing;
+        (*this)[toKing] = (*this)[fromKing];
+        (*this)[fromKing] = NULL;
+
+        (*this)[fromRook]->pos = toRook;
+        (*this)[toRook] = (*this)[fromRook];
+        (*this)[fromRook] = NULL;
+        return;
+    }
+
+    //Взятие на проходе
+    if (move.type == TypeMove::en_passant)
+    {
+        cemetery.push_back((*this)[Point(move.to.x, move.from.y)]);
+        delFigure(move.to);
+    }    
 
     (*this)[move.from]->pos = move.to;
     (*this)[move.to] = (*this)[move.from];
@@ -166,31 +214,71 @@ figurePtr& Board::operator[](Point pos)
 void Board::undoMove() 
 {
     //Добавить обработку отмены рокировки, взятия на проходе, трансформации
-    Move lastMove = movesHistory[movesHistory.size() - 1];
+    Move lastMove = movesHistory.back();
     movesHistory.pop_back();
 
-    if (lastMove.to == lastMove.from)
+    if (lastMove.type == TypeMove::empty)
         return;
 
     //Счетчик количества ходов для проверки возможности рокировки
-    if (lastMove.figureName == FigureName::rook)
-        ((Rook*)(*this)[lastMove.to])->countStep--;
+    if (lastMove.type != castling)
+    {
+        if (lastMove.figureName == FigureName::rook)
+            ((Rook*)(*this)[lastMove.to])->countStep--;
 
-    if (lastMove.figureName == FigureName::king)
-        ((King*)(*this)[lastMove.to])->countStep--;
+        if (lastMove.figureName == FigureName::king)
+            ((King*)(*this)[lastMove.to])->countStep--;
+    }
 
-    if ((*this)[lastMove.to]->name != FigureName::pawn && lastMove.figureName == FigureName::pawn)
+    //Отмена трансформации
+    if (lastMove.type == TypeMove::transform || lastMove.type == TypeMove::attack_and_transform)
     {
         Figure* oldFigure = (*this)[lastMove.to];
         delFigure(lastMove.to);
-        addFigure(new Pawn(lastMove.to, oldFigure->color));
+        addFigure(new Pawn(lastMove.to, oldFigure->color));        
+    }
+    
+    //Отмена рокировки
+    if (lastMove.type == TypeMove::castling)
+    {
+        int dxKing, dxRook;
+
+        Point toRook = lastMove.to;
+        Point fromRook = toRook;
+
+        Point toKing = lastMove.from;
+        Point fromKing = toKing;        
+
+        if (lastMove.to.x > lastMove.from.x)
+        {
+            dxKing = 2;
+            dxRook = -2;
+        }
+        else
+        {
+            dxKing = -2;
+            dxRook = 3;
+        }     
+
+        fromRook.x += dxRook;  
+        fromKing.x += dxKing; 
+
+        (*this)[fromKing]->pos = toKing;
+        (*this)[toKing] = (*this)[fromKing];
+        (*this)[fromKing] = NULL;
+
+        (*this)[fromRook]->pos = toRook;
+        (*this)[toRook] = (*this)[fromRook];
+        (*this)[fromRook] = NULL;
+
+        return;
     }
 
     (*this)[lastMove.to]->pos = lastMove.from; 
     (*this)[lastMove.from] = (*this)[lastMove.to];
     (*this)[lastMove.to] = NULL;
 
-    if (lastMove.isAttack)
+    if (lastMove.type == TypeMove::attack || lastMove.type == TypeMove::en_passant || lastMove.type == TypeMove::attack_and_transform)
     {        
         addFigure(cemetery.back());
         cemetery.pop_back();        
@@ -285,7 +373,8 @@ bool Board::isLegal(Role role)
             }
     
     for(Move move : possibleMoves)
-        if (move.isAttack && (*this)[move.to]->name == FigureName::king)
+        if ((move.type == TypeMove::attack || move.type == TypeMove::attack_and_transform) 
+            && (*this)[move.to]->name == FigureName::king)
         {
             if ((*this)[move.to]->color == FigureColor::white)
                 whiteKingAttack = true;

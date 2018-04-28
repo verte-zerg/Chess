@@ -3,6 +3,7 @@
 
 #include "point.h"
 #include "figureName.h"
+#include "typeMove.h"
 #include <iostream>
 #include <cstring>
 
@@ -10,25 +11,26 @@
  * @class Move
  * @brief Структура, содержащая информацию о ходе
  */
-struct Move {
+struct Move 
+{
 public: 
     Point from; ///< Начальное положение фигуры
     Point to; ///< Конечное положение фигуры
-    bool isAttack; ///< Является ли ход атакующим
+    TypeMove type; ///< Тип хода
     FigureName figureName; ///< Тип фигуры
 
     Move()
     {
         from = Point(0, 0);
         to = Point(0, 0);
-        isAttack = false;
+        type = TypeMove::empty;
     }
 
-    Move(Point _from, Point _to, bool _isAttack, FigureName _figureName)
+    Move(Point _from, Point _to, TypeMove _type, FigureName _figureName)
     {
         from = _from;
         to = _to;
-        isAttack = _isAttack;
+        type = _type;
         figureName = _figureName;
     }
 
@@ -36,7 +38,7 @@ public:
     {
         from = m.from;
         to = m.to;
-        isAttack = m.isAttack;
+        type = m.type;
         figureName = m.figureName;
     }
 
@@ -60,7 +62,7 @@ public:
         default:
             break;
         }
-        os << name << char(97 + m.from.x) << m.from.y + 1 << " " << char(97 + m.to.x) << m.to.y + 1 << (m.isAttack ? " kill" : "");
+        os << name << char(97 + m.from.x) << m.from.y + 1 << " " << char(97 + m.to.x) << m.to.y + 1;// << (m.isAttack ? " kill" : "");
         return os;
     }
 };

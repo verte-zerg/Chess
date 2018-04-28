@@ -1,16 +1,18 @@
 #include <condition_variable>
 #include <thread>
 #include <mutex>
-#include "board.h"
 #include <iostream>
 
+#include "board.h"
 #include "manager.h"
+#include "stateGame.h"
 
 extern Board* globalBoard;
 
 extern Message* msg;
 extern std::condition_variable checkMessage;
 extern std::mutex lockAccess;
+extern StateGame stateGame;
 
 void plotInConsole()
 {
@@ -109,6 +111,9 @@ void Manager::recieveMessage()
             //std::cout << "Менеджер принял." << std::endl;                                   
             locker.unlock();   
             processingOfMessage();       
+
+            if (stateGame != StateGame::game)
+				return;
         }
     }
 }
