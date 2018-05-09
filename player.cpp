@@ -67,7 +67,6 @@ Move Player::getBestMove()
 		if (tmp > bestAssessment)	
 		{	
 			bestAssessment = tmp;	
-
 			bestMove = newPos->lastMove;
 		}	
 		delete newPos;
@@ -106,10 +105,7 @@ void Player::recieveMessage() {
         std::unique_lock<std::mutex> locker(lockAccess);
         do
             checkMessage.wait(locker); 
-        while (msg == NULL);
-
-		if (stateGame != StateGame::game)
-			return;          
+        while (msg == NULL);       
 
         if (msg->reciever != role)
         {
@@ -123,10 +119,7 @@ void Player::recieveMessage() {
             //std::cout << "Игрок " << ((role == 0) ? "Белый" : "Черный") << " принял. " << std::endl;                        
             msg = NULL;
             locker.unlock();            
-            sendMessage(thinking()); 
-            
-			if (stateGame != StateGame::game)
-				return;                 
+            sendMessage(thinking());               
         }
     }
 }
@@ -136,6 +129,6 @@ void Player::sendMessage(Message* m)
     std::unique_lock<std::mutex> locker(lockAccess);
     msg = m;   
 
-    std::cout << "Игрок " << ((role == 0) ? "Белый" : "Черный") << ": ход -> " << m->move << std::endl; 
+    std::cout << "Игрок " << ((role == 0) ? "Белый" : "Черный") << ": " << m->move << std::endl; 
     checkMessage.notify_all();
 }

@@ -59,7 +59,7 @@ void Manager::sendMessage(Message* m)
 {
     std::unique_lock<std::mutex> locker(lockAccess);
     //std::cout << "Менеджер отправил игроку " << ((state == 0) ? "Белый" : "Черный") << ".\n\n"; 
-    std::cout << "Ход " << ((state == 0) ? "белых" : "Черных") << "\n\n"; 
+    std::cout << "Ход игрока " << ((state == 0) ? "Белый" : "Черный") << "\n\n"; 
     msg = m;
 }
 
@@ -67,14 +67,18 @@ void Manager::processingOfMessage()
 {
     globalBoard->moveFigure(msg->move);
     plotInConsole();
-    state = (Role)(!state);    
-    Message* m = new Message(state, Move());
-    
-    std::this_thread::sleep_for(std::chrono::milliseconds{2000});
-    
-    sendMessage(m);
 
-    checkMessage.notify_all();
+    if (stateGame == StateGame::game)
+    {
+        state = (Role)(!state);    
+        Message* m = new Message(state, Move());
+        
+        std::this_thread::sleep_for(std::chrono::milliseconds{2000});
+        
+        sendMessage(m);
+
+        checkMessage.notify_all();
+    }
 }
 
 void Manager::recieveMessage() 

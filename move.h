@@ -44,7 +44,7 @@ public:
 
     friend std::ostream& operator << (std::ostream &os, const Move &m)
     {
-        std::string name;        
+        std::string name, type;        
         switch (m.figureName)
         {
             case FigureName::pawn : name = "";
@@ -59,10 +59,27 @@ public:
                 break;
             case FigureName::king : name = "Kg";
                 break;
-        default:
-            break;
         }
-        os << name << char(97 + m.from.x) << m.from.y + 1 << " " << char(97 + m.to.x) << m.to.y + 1;// << (m.isAttack ? " kill" : "");
+
+        switch (m.type)
+        {
+            case TypeMove::attack : type = "атака";
+                break;
+            case TypeMove::attack_and_transform : type = "атака и трансформация";
+                break;
+            case TypeMove::castling : type = "рокировка";
+                break;
+            case TypeMove::empty : type = "пустой ход";
+                break;
+            case TypeMove::en_passant : type = "взятие на проходе";
+                break;
+            case TypeMove::move : type = "ход";
+                break;
+            case TypeMove::transform : type = "трансформация";
+                break;
+        }
+
+        os << type << " -> " << name << char(97 + m.from.x) << m.from.y + 1 << " " << char(97 + m.to.x) << m.to.y + 1 << " ";
         return os;
     }
 };

@@ -131,10 +131,16 @@ void loopGetMoves(Board* b)
 int main()
 {
     globalBoard = new Board();            
-    consoleArrangement(globalBoard);
+    consoleArrangement(globalBoard);    
     plotInConsole();    
 
-    Player playerWhite(Role::playerWhite, 4), playerBlack(Role::playerBlack, 3);
+    if (!globalBoard->isLegal(Role::playerWhite))
+    {
+        std::cout << "Некорректная расстановка." << std::endl;
+        return 0;
+    }
+
+    Player playerWhite(Role::playerWhite, 5), playerBlack(Role::playerBlack, 3);
     Manager manager;
 
     std::thread mng(&Manager::recieveMessage, std::ref(manager));
@@ -142,8 +148,6 @@ int main()
     std::thread plB(&Player::recieveMessage, std::ref(playerBlack));
 
     mng.join();
-    plW.join();
-    plB.join();
 
     return 0;
 }
