@@ -1,6 +1,6 @@
 #include "queen.h"
 
-Queen::Queen(Point _pos, FigureColor _figureColor): Figure(_pos, _figureColor, FigureName::queen) {};
+Queen::Queen(Point _pos, FigureColor _figureColor): Figure(_pos, _figureColor, FigureName::queen, 5.) {};
 
 void Queen::findChess(short dx, short dy, std::vector<Move>& moves, Board* b, bool ownAttack) const
 {

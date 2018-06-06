@@ -51,7 +51,7 @@ double Player::costFunc(const Position* pos)
 
 Move Player::getBestMove()
 { 
-	Position initPos(calcDepth, role);
+	Position initPos(calcDepth, role, role);
 	initPos.canvass(ownBoard, role);
 
 	Move bestMove = initPos.possibleMoves[0];
@@ -60,7 +60,7 @@ Move Player::getBestMove()
 
 	for (uint i = 0; i < initPos.possibleMoves.size(); i++)
 	{
-		Position* newPos = new Position(calcDepth, role);
+		Position* newPos = new Position(calcDepth, role, role);
 		newPos->lastMove = initPos.possibleMoves[i];
 		tmp = newPos->getBestAssessment(ownBoard, 1);
 		//std::cout << "Move: " << newPos->lastMove << "; Cost: " << tmp << std::endl;
@@ -81,7 +81,7 @@ Move Player::getBestMove()
 	{
 		std::cout << "Пат поставил игрок " << ((role == Role::playerWhite) ? "Белый" : "Черный") << std::endl;
 		stateGame = StateGame::stalemate;
-	}
+	}	
 	
 	return bestMove;
 }

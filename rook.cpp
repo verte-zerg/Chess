@@ -1,6 +1,6 @@
 #include "rook.h"
 
-Rook::Rook(Point _pos, FigureColor _figureColor) : Figure(_pos, _figureColor, FigureName::rook), countStep(0) {};
+Rook::Rook(Point _pos, FigureColor _figureColor) : Figure(_pos, _figureColor, FigureName::rook, 8.), countStep(0) {};
 
 void Rook::findChess(short dx, short dy, std::vector<Move>& moves, Board* b, bool ownAttack) const
 {

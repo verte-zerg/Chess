@@ -6,6 +6,7 @@
 #include "board.h"
 #include "manager.h"
 #include "stateGame.h"
+#include "position.h"
 
 extern Board* globalBoard;
 
@@ -15,10 +16,13 @@ extern std::mutex lockAccess;
 extern StateGame stateGame;
 
 void plotInConsole()
-{
-    std::cout << std::endl;
+{    
+    std::cout << std::endl << "     A   B   C   D   E   F   G   H" << std::endl;    
+    std::cout << "   --------------------------------" << std::endl;
+
     for (int i = 7; i >= 0; i--)
     {
+        std::cout << i+1 << "  ";
         for (int j = 0; j < 8; j++)
             if ((*globalBoard)[Point(j, i)] != NULL)
             {
@@ -48,11 +52,14 @@ void plotInConsole()
             }
             else
                 std::cout << "|  |";
-        std::cout << std::endl;
-        for (uint k = 0; k < 8; k++)
-            std::cout << "----";
-        std::cout << std::endl;
+
+        std::cout << "  " << i+1 << std::endl;          
+        std::cout << "   --------------------------------" << std::endl;
     }
+    std::cout << "     A   B   C   D   E   F   G   H" << std::endl;
+    
+    Position pos(0, Role::playerWhite, Role::playerWhite);
+    std::cout << "Оценка текущей позиции: " << pos.costFunc(globalBoard) << "\n\n";
 }
 
 void Manager::sendMessage(Message* m) 

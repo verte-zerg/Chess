@@ -1,7 +1,7 @@
 #include "king.h"
 #include <cmath>
 
-King::King(Point _pos, FigureColor _figureColor) : Figure(_pos, _figureColor, FigureName::king), countStep(0) {};
+King::King(Point _pos, FigureColor _figureColor) : Figure(_pos, _figureColor, FigureName::king, 0.), countStep(0) {};
 
 void King::findChess(short dx, short dy, std::vector<Move>& moves, Board* b, bool ownAttack) const
 {
@@ -56,6 +56,12 @@ void King::isLegalCastling(std::vector<Move>& moves, Board* b, Point posOfRook) 
 					from = 4;
 					to = 6;
 				}
+				else
+				{
+					from = 1; 
+					to = 4;
+				}
+
 				for (short x = from; x <= to; x++) 
 				{
 					if (b->cellIsAttacked(Point(from, posOfRook.y), (Role)color) == true) 

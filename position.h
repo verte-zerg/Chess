@@ -19,6 +19,7 @@ public:
 
 	std::vector<Move> possibleMoves; ///< Все возможные ходы из данной ситуации
 
+    Role whoCall; ///< Цвет игрока, который вызвал оценку позиций
 	Role whoseRole; ///< Цвет игрока, ход которого рассчитывается в этой ситуации
 	Move lastMove; ///< Ход, который привел к данной ситуации
 
@@ -34,7 +35,7 @@ public:
      * @param _depth Глубина текущего хода в полуходах
      * @param _role Цвет игрока, ход которого рассчитывается в этой ситуации
      */
-	Position(uint _maxDepth, Role _role);
+	Position(uint _maxDepth, Role _role, Role _whoCall);
 
     /**
      * @brief Функция оценки доски

@@ -43,15 +43,12 @@ void Board::moveFigure(Move move)
         return;
     }
 
-    //Счетчик количества ходов для проверки возможности рокировки
-    if (move.type != TypeMove::castling)
-    {
-        if (move.figureName == FigureName::rook)
-            ((Rook*)(*this)[move.from])->countStep++;
+    //Счетчик количества ходов для проверки возможности рокировки        
+    if (move.figureName == FigureName::rook)
+        ((Rook*)(*this)[move.from])->countStep++;
 
-        if (move.figureName == FigureName::king)
-            ((King*)(*this)[move.from])->countStep++;
-    }
+    if (move.figureName == FigureName::king)
+        ((King*)(*this)[move.from])->countStep++;    
 
     //Рокировка
     if (move.type == TypeMove::castling)

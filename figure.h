@@ -19,6 +19,7 @@ public:
     Point pos; ///< Позиция фигуры
     FigureColor color; ///< Цвет фигуры
     const FigureName name; ///< Тип фигуры
+    const double costControlCell; ///< Коэффициент оценки контролируемости ячеек
 
     /**
      * @brief Возвращает список возможных ходов
@@ -43,7 +44,7 @@ public:
      * @param _pos Позиция фигуры
      * @param _color Цвет фигуры
      */
-    Figure(Point _pos, FigureColor _color, FigureName _name): pos(_pos), color(_color), name(_name) {};   
+    Figure(Point _pos, FigureColor _color, FigureName _name, int _costControlCell): pos(_pos), color(_color), name(_name), costControlCell(_costControlCell) {};   
 
     /**
      * @brief Конструктор копирования

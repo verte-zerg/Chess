@@ -1,6 +1,6 @@
 #include "pawn.h"
 
-Pawn::Pawn(Point _pos, FigureColor _figureColor) : Figure(_pos, _figureColor, FigureName::pawn) {};
+Pawn::Pawn(Point _pos, FigureColor _figureColor) : Figure(_pos, _figureColor, FigureName::pawn, 0.) {};
 
 //Добавить превращение в другую фигуру и взятие на проходе
 void Pawn::findChess(short dx, bool canAttack, std::vector<Move>& moves, Board* b, bool ownAttack) const

@@ -140,7 +140,7 @@ int main()
         return 0;
     }
 
-    Player playerWhite(Role::playerWhite, 5), playerBlack(Role::playerBlack, 3);
+    Player playerWhite(Role::playerWhite, 3), playerBlack(Role::playerBlack, 3);
     Manager manager;
 
     std::thread mng(&Manager::recieveMessage, std::ref(manager));

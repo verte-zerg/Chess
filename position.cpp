@@ -1,7 +1,7 @@
 #include "position.h"
 #include "typeMove.h"
  
-Position::Position(uint _maxDepth, Role _role): maxDepth(_maxDepth), whoseRole(_role), moveDepth(0) {};
+Position::Position(uint _maxDepth, Role _role, Role _whoCall): maxDepth(_maxDepth), whoseRole(_role), whoCall(_whoCall), moveDepth(0) {};
 
 int Position::getBestAssessment(Board* b, uint nowDepth)
 {
@@ -41,7 +41,7 @@ int Position::getBestAssessment(Board* b, uint nowDepth)
 
 	for (uint i = 0; i < possibleMoves.size(); i++)
 	{
-		Position* newPos = new Position(maxDepth, (Role)(!whoseRole));
+		Position* newPos = new Position(maxDepth, (Role)(!whoseRole), whoCall);
 		newPos->lastMove = possibleMoves[i];
 		tmp = newPos->getBestAssessment(b, nowDepth + 1);		
 		if (i == 0)
@@ -58,7 +58,7 @@ int Position::getBestAssessment(Board* b, uint nowDepth)
 	if (b->getEnemyFigures(whoseRole).size() == 1)
 	{
 		Figure* fig = b->getEnemyFigures(whoseRole)[0];
-		Position* newPos = new Position(maxDepth, (Role)(!whoseRole));
+		Position* newPos = new Position(maxDepth, (Role)(!whoseRole), whoCall);
 
 		//Создаем пустой ход
 		newPos->lastMove = Move(fig->pos, fig->pos, TypeMove::empty, fig->name);
@@ -87,6 +87,9 @@ double Position::costFunc(Board* b)
 				if (whoseRole != (int)(*b)[Point(i, j)]->color)
 					k = -1;
 				cost += k*(*b)[Point(i, j)]->getCost();
+				
+				if (whoCall == Role::playerWhite)
+					cost += (*b)[Point(i, j)]->costControlCell*k*(double)(*b)[Point(i, j)]->getControlCell(b).size();
 			}
 	return cost;
 }
